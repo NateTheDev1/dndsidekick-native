@@ -1,10 +1,13 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, useColorScheme } from 'react-native'
+import { getTextColor } from '../theme/color'
 
 const Landing = () => {
+  const isDarkMode = useColorScheme() === 'dark'
+
   return (
     <View>
-      <Text>Landing</Text>
+      <Text style={{ color: getTextColor(isDarkMode) }}>Landing</Text>
     </View>
   )
 }
