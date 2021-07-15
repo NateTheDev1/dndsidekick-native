@@ -5,20 +5,25 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "codegen:build": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.21",
     "@expo-google-fonts/noto-sans-jp": "^0.2.0",
     "expo": "~42.0.1",
     "expo-app-loading": "^1.1.2",
     "expo-font": "~9.2.1",
     "expo-status-bar": "~1.0.4",
+    "graphql": "^15.5.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-paper": "^4.9.2",
     "react-native-web": "~0.13.12",
     "react-router-native": "^5.2.0",
+    "react-router-native-stack": "^0.0.16",
+    "subscriptions-transport-ws": "^0.9.19",
     "tailwind-rn": "^3.0.1"
   },
   "devDependencies": {
