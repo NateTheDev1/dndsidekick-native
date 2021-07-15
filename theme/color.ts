@@ -40,6 +40,5 @@ export const LAYOUT_CONSTANTS = {
 };
 
 export function getTextColor(darkMode: boolean) {
-  alert(darkMode);
   return darkMode ? COLOR_CONSTANTS.text.light : COLOR_CONSTANTS.text.dark;
 }
