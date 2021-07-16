@@ -58,6 +58,7 @@ const Login = () => {
               placeholder="johndoe@dndsidekick.com"
               mode="outlined"
               autoCompleteType="email"
+              autoCapitalize="none"
               outlineColor="gray"
               value={formValues.email}
               onChangeText={(text) =>
