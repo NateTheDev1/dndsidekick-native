@@ -22,7 +22,7 @@ const Header = ({ title }: { title: string }) => {
 const styles = StyleSheet.create({
   textStyle: {
     fontFamily: "NotoSansJP_700Bold",
-    fontSize: 30,
+    fontSize: 35,
   },
 });
 
