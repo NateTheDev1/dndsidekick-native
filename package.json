@@ -25,7 +25,8 @@
     "react-router-native-stack": "^0.0.16",
     "subscriptions-transport-ws": "^0.9.19",
     "tailwind-rn": "^3.0.1",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "react-native-svg": "12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

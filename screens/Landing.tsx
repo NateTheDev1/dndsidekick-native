@@ -91,7 +91,7 @@ const Landing = () => {
               >
                 <Text style={styles.buttonText}>LOGIN</Text>
               </Button>
-              <Button onPress={() => alert("register")} mode="text">
+              <Button onPress={() => history.push("/register")} mode="text">
                 <Text
                   style={{
                     color: "white",
