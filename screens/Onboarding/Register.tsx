@@ -12,24 +12,34 @@ import Footer from "./components/Footer";
 import { useState } from "react";
 import validator from "validator";
 
-const Login = () => {
+const Register = () => {
   const [fontsLoaded] = useFonts({
     NotoSansJP_500Medium,
   });
 
-  const [formValues, setFormValues] = useState({ email: "", password: "" });
-  const [formErrors, setFormErrors] = useState({ email: "", password: "" });
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+    name: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    password: "",
+    name: "",
+  });
   const [viewPassword, setViewPassword] = useState(false);
 
-  const onLogin = () => {
-    setFormErrors({ email: "", password: "" });
+  const onRegister = () => {
+    setFormErrors({ email: "", password: "", name: "" });
 
     const emailError = !validator.isEmail(formValues.email);
     const passwordError = formValues.password.length < 1;
+    const nameError = formValues.name.length < 2;
 
     setFormErrors({
       email: emailError ? "Email is invalid" : "",
       password: passwordError ? "Password is invalid" : "",
+      name: nameError ? "Name is invalid" : "",
     });
   };
 
@@ -49,8 +59,27 @@ const Login = () => {
             justifyContent: "space-between",
           }}
         >
-          <Header title="Welcome Back" />
+          <Header title="Let's Get Started" />
           <View>
+            <TextInput
+              label="Full Name"
+              placeholder="John DOe"
+              mode="outlined"
+              autoCompleteType="name"
+              outlineColor="#BCBDBC"
+              returnKeyType="next"
+              clearButtonMode="unless-editing"
+              value={formValues.name}
+              style={{ marginTop: 50 }}
+              onChangeText={(text) =>
+                setFormValues({ ...formValues, name: text })
+              }
+              error={formErrors.name.length > 0}
+              theme={{ colors: { primary: "#BCBDBC" }, roundness: 10 }}
+            />
+            <HelperText type="error" visible={formErrors.name.length > 0}>
+              {formErrors.name}
+            </HelperText>
             <TextInput
               label="Email"
               placeholder="johndoe@dndsidekick.com"
@@ -64,6 +93,7 @@ const Login = () => {
               onChangeText={(text) =>
                 setFormValues({ ...formValues, email: text })
               }
+              style={{ marginTop: 25 }}
               error={formErrors.email.length > 0}
               theme={{ colors: { primary: "#BCBDBC" }, roundness: 10 }}
             />
@@ -100,24 +130,12 @@ const Login = () => {
             <HelperText type="error" visible={formErrors.password.length > 0}>
               {formErrors.password}
             </HelperText>
-            <Link to="/forgot-password">
-              <Text
-                style={{
-                  alignSelf: "flex-end",
-                  color: "black",
-                  opacity: 0.5,
-                  textDecorationLine: "underline",
-                }}
-              >
-                Forgot password?
-              </Text>
-            </Link>
           </View>
           <Footer
-            title="LOGIN"
-            linkTitle="Don't have an account?"
-            linkURL="/register"
-            buttonAction={onLogin}
+            title="REGISTER"
+            linkTitle="Already have an account?"
+            linkURL="/login"
+            buttonAction={onRegister}
           />
         </SafeAreaView>
       </FadeInView>
@@ -127,4 +145,4 @@ const Login = () => {
   return <></>;
 };
 
-export default Login;
+export default Register;
