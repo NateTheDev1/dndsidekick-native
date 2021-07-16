@@ -8,6 +8,8 @@ import AppLoading from "expo-app-loading";
 import { Asset } from "expo-asset";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "./business-domain/ApolloClient";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 export default function App() {
   const [appLoaded, setAppLoaded] = useState(false);
@@ -40,12 +42,14 @@ export default function App() {
   }
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <View style={styles.container}>
-        <Router />
-        <StatusBar style="light" />
-      </View>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={apolloClient}>
+        <View style={styles.container}>
+          <Router />
+          <StatusBar style="light" />
+        </View>
+      </ApolloProvider>
+    </Provider>
   );
 }
 

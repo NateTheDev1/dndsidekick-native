@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
   useFonts,
   NotoSansJP_700Bold,
@@ -31,7 +31,7 @@ const Footer = ({
         <Button onPress={buttonAction} style={styles.button}>
           <Text style={styles.buttonText}>{title}</Text>
         </Button>
-        <Link to={linkURL}>
+        <Link component={TouchableOpacity} to={linkURL}>
           <Text style={styles.linkStyle}>{linkTitle}</Text>
         </Link>
       </View>

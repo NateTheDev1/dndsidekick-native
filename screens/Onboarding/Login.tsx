@@ -1,7 +1,12 @@
 import React from "react";
-import { View, Text, SafeAreaView } from "react-native";
-import { Button, HelperText, TextInput } from "react-native-paper";
-import { Link } from "react-router-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  Button,
+  HelperText,
+  TextInput,
+} from "react-native-paper";
+import { Link, useHistory } from "react-router-native";
 import { FadeInView } from "../../components/FadeInView";
 import {
   useFonts,
@@ -11,16 +16,25 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useState } from "react";
 import validator from "validator";
+import { useLoginMutation } from "../../business-domain/graphql";
+import { COLOR_CONSTANTS } from "../../theme/color";
+import { UserActions } from "../../redux/User/actions";
+import { UserSelectors } from "../../redux/User/selectors";
 
 const Login = () => {
+  const loggedIn = UserSelectors.useSelectAuthenticated();
+
   const [fontsLoaded] = useFonts({
     NotoSansJP_500Medium,
   });
 
+  const history = useHistory();
+
   const [formValues, setFormValues] = useState({ email: "", password: "" });
   const [formErrors, setFormErrors] = useState({ email: "", password: "" });
   const [viewPassword, setViewPassword] = useState(false);
-
+  const [login, loginData] = useLoginMutation();
+  const setLoggedIn = UserActions.useLogin();
   const onLogin = () => {
     setFormErrors({ email: "", password: "" });
 
@@ -31,6 +45,17 @@ const Login = () => {
       email: emailError ? "Email is invalid" : "",
       password: passwordError ? "Password is invalid" : "",
     });
+
+    if (!emailError && !passwordError) {
+      login({ variables: { credentials: { ...formValues } } })
+        .then((res) => {
+          if (!res.errors && res.data) {
+            setLoggedIn(res.data.login.token as string);
+            history.push("/home");
+          }
+        })
+        .catch((e) => console.error(e));
+    }
   };
 
   if (fontsLoaded) {
@@ -86,7 +111,7 @@ const Login = () => {
                 setFormValues({ ...formValues, password: text })
               }
               theme={{ colors: { primary: "#BCBDBC" }, roundness: 10 }}
-              secureTextEntry={viewPassword}
+              secureTextEntry={!viewPassword}
               returnKeyType="done"
               error={formErrors.password.length > 0}
               right={
@@ -100,7 +125,7 @@ const Login = () => {
             <HelperText type="error" visible={formErrors.password.length > 0}>
               {formErrors.password}
             </HelperText>
-            <Link to="/forgot-password">
+            <Link component={TouchableOpacity} to="/forgot-password">
               <Text
                 style={{
                   alignSelf: "flex-end",
@@ -112,13 +137,37 @@ const Login = () => {
                 Forgot password?
               </Text>
             </Link>
+            {loginData.error &&
+              loginData.error?.message.length > 0 &&
+              !loginData.loading && (
+                <HelperText
+                  type="error"
+                  style={{
+                    marginTop: 25,
+                    alignSelf: "center",
+                    fontSize: 14,
+                  }}
+                  visible={true}
+                >
+                  Invalid credentials
+                </HelperText>
+              )}
           </View>
-          <Footer
-            title="LOGIN"
-            linkTitle="Don't have an account?"
-            linkURL="/register"
-            buttonAction={onLogin}
-          />
+
+          {loginData.loading ? (
+            <ActivityIndicator
+              animating={true}
+              color={COLOR_CONSTANTS.accent.red}
+              size="large"
+            />
+          ) : (
+            <Footer
+              title="LOGIN"
+              linkTitle="Don't have an account?"
+              linkURL="/register"
+              buttonAction={onLogin}
+            />
+          )}
         </SafeAreaView>
       </FadeInView>
     );
