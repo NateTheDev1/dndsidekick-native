@@ -1,7 +1,12 @@
 import React from "react";
 import { View, Text, SafeAreaView } from "react-native";
-import { Button, HelperText, TextInput } from "react-native-paper";
-import { Link } from "react-router-native";
+import {
+  ActivityIndicator,
+  Button,
+  HelperText,
+  TextInput,
+} from "react-native-paper";
+import { Link, useHistory } from "react-router-native";
 import { FadeInView } from "../../components/FadeInView";
 import {
   useFonts,
@@ -11,11 +16,18 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useState } from "react";
 import validator from "validator";
+import { useSignupMutation } from "../../business-domain/graphql";
+import { UserActions } from "../../redux/User/actions";
+import { COLOR_CONSTANTS } from "../../theme/color";
 
 const Register = () => {
   const [fontsLoaded] = useFonts({
     NotoSansJP_500Medium,
   });
+
+  const [signup, signupData] = useSignupMutation();
+  const history = useHistory();
+  const setLoggedIn = UserActions.useLogin();
 
   const [formValues, setFormValues] = useState({
     email: "",
@@ -41,6 +53,17 @@ const Register = () => {
       password: passwordError ? "Password is invalid" : "",
       name: nameError ? "Name is invalid" : "",
     });
+
+    if (!emailError && !passwordError && !nameError) {
+      signup({ variables: { user: { ...formValues } } })
+        .then((res) => {
+          if (!res.errors && res.data) {
+            setLoggedIn(res.data.signup.token as string);
+            history.push("/home");
+          }
+        })
+        .catch((e) => console.error(e));
+    }
   };
 
   if (fontsLoaded) {
@@ -63,7 +86,7 @@ const Register = () => {
           <View>
             <TextInput
               label="Full Name"
-              placeholder="John DOe"
+              placeholder="John Doe"
               mode="outlined"
               autoCompleteType="name"
               outlineColor="#BCBDBC"
@@ -116,7 +139,7 @@ const Register = () => {
                 setFormValues({ ...formValues, password: text })
               }
               theme={{ colors: { primary: "#BCBDBC" }, roundness: 10 }}
-              secureTextEntry={viewPassword}
+              secureTextEntry={!viewPassword}
               returnKeyType="done"
               error={formErrors.password.length > 0}
               right={
@@ -130,13 +153,37 @@ const Register = () => {
             <HelperText type="error" visible={formErrors.password.length > 0}>
               {formErrors.password}
             </HelperText>
+            {signupData.error &&
+              signupData.error?.message.length > 0 &&
+              !signupData.loading && (
+                <HelperText
+                  type="error"
+                  style={{
+                    marginTop: 25,
+                    alignSelf: "center",
+                    fontSize: 14,
+                  }}
+                  visible={true}
+                >
+                  There was an error registering your account. This email may
+                  already be in use.
+                </HelperText>
+              )}
           </View>
-          <Footer
-            title="REGISTER"
-            linkTitle="Already have an account?"
-            linkURL="/login"
-            buttonAction={onRegister}
-          />
+          {signupData.loading ? (
+            <ActivityIndicator
+              animating={true}
+              color={COLOR_CONSTANTS.accent.red}
+              size="large"
+            />
+          ) : (
+            <Footer
+              title="REGISTER"
+              linkTitle="Already have an account?"
+              linkURL="/login"
+              buttonAction={onRegister}
+            />
+          )}
         </SafeAreaView>
       </FadeInView>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import {
   ActivityIndicator,
   Button,
@@ -125,7 +125,7 @@ const Login = () => {
             <HelperText type="error" visible={formErrors.password.length > 0}>
               {formErrors.password}
             </HelperText>
-            <Link to="/forgot-password">
+            <Link component={TouchableOpacity} to="/forgot-password">
               <Text
                 style={{
                   alignSelf: "flex-end",
