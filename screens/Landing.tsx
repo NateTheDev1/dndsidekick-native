@@ -21,9 +21,12 @@ import {
 import tailwind from "tailwind-rn";
 import { useHistory } from "react-router-native";
 import { FadeInView } from "../components/FadeInView";
+import { UserSelectors } from "../redux/User/selectors";
+import { useEffect } from "react";
 
 const Landing = () => {
   // const isDarkMode = useColorScheme() === 'dark
+  const loggedIn = UserSelectors.useSelectAuthenticated();
 
   const history = useHistory();
 
@@ -37,6 +40,12 @@ const Landing = () => {
       Linking.openURL(url);
     }
   };
+
+  useEffect(() => {
+    if (loggedIn) {
+      history.push("/home");
+    }
+  }, [loggedIn]);
 
   if (fontsLoaded) {
     return (
