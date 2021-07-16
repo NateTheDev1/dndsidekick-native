@@ -24,13 +24,15 @@
     "react-router-native": "^5.2.0",
     "react-router-native-stack": "^0.0.16",
     "subscriptions-transport-ws": "^0.9.19",
-    "tailwind-rn": "^3.0.1"
+    "tailwind-rn": "^3.0.1",
+    "validator": "^13.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
     "@types/react-router-native": "^5.1.1",
+    "@types/validator": "^13.6.3",
     "typescript": "~4.0.0"
   },
   "private": true,
