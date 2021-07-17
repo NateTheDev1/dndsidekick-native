@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   View,
   Text,
@@ -8,40 +8,54 @@ import {
   StyleSheet,
   SafeAreaView,
   Linking,
-} from 'react-native'
+} from "react-native";
 
-import { COLOR_CONSTANTS } from '../theme/color'
+import { COLOR_CONSTANTS } from "../theme/color";
 
-import { Button } from 'react-native-paper'
+import { Button } from "react-native-paper";
 import {
   useFonts,
   NotoSansJP_500Medium,
   NotoSansJP_300Light,
-} from '@expo-google-fonts/noto-sans-jp'
-import tailwind from 'tailwind-rn'
+} from "@expo-google-fonts/noto-sans-jp";
+import tailwind from "tailwind-rn";
+import { useHistory } from "react-router-native";
+import { FadeInView } from "../components/FadeInView";
+import { UserSelectors } from "../redux/User/selectors";
+import { useEffect } from "react";
 
 const Landing = () => {
-  // const isDarkMode = useColorScheme() === 'dark'
+  // const isDarkMode = useColorScheme() === 'dark
+  const loggedIn = UserSelectors.useSelectAuthenticated();
+
+  const history = useHistory();
+
   const [fontsLoaded] = useFonts({
     NotoSansJP_500Medium,
     NotoSansJP_300Light,
-  })
+  });
 
   const onSocialLink = (url: string) => {
     if (Linking.canOpenURL(url)) {
-      Linking.openURL(url)
+      Linking.openURL(url);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      history.push("/home");
+    }
+  }, [loggedIn]);
 
   if (fontsLoaded) {
     return (
-      <View
+      <FadeInView
         style={{
           flex: 1,
         }}
       >
         <ImageBackground
-          source={require('../assets/images/landing-image.png')}
+          source={require("../assets/images/landing-image.png")}
           resizeMode="cover"
           style={{
             flex: 1,
@@ -50,45 +64,48 @@ const Landing = () => {
           <SafeAreaView
             style={{
               flex: 1,
-              display: 'flex',
-              justifyContent: 'space-around',
-              alignItems: 'center',
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
             }}
           >
             <Text
               style={{
-                color: 'white',
+                color: "white",
                 opacity: 0.3,
-                fontFamily: 'NotoSansJP_500Medium',
+                fontFamily: "NotoSansJP_500Medium",
               }}
             >
               Release 0.0.1
             </Text>
             <View
               style={{
-                display: 'flex',
-                justifyContent: 'center',
+                display: "flex",
+                justifyContent: "center",
                 flex: 1,
               }}
             >
               <Image
-                source={require('../assets/images/landing-logo.png')}
+                source={require("../assets/images/landing-logo.png")}
                 resizeMode="contain"
                 style={{
                   width: 275,
-                  alignSelf: 'center',
-                  ...tailwind('mt-28'),
+                  alignSelf: "center",
+                  ...tailwind("mt-28"),
                 }}
               />
-              <Button onPress={() => alert('login')} style={styles.button}>
+              <Button
+                onPress={() => history.push("/login")}
+                style={styles.button}
+              >
                 <Text style={styles.buttonText}>LOGIN</Text>
               </Button>
-              <Button onPress={() => alert('register')} mode="text">
+              <Button onPress={() => history.push("/register")} mode="text">
                 <Text
                   style={{
-                    color: 'white',
+                    color: "white",
                     letterSpacing: 2,
-                    fontFamily: 'NotoSansJP_500Medium',
+                    fontFamily: "NotoSansJP_500Medium",
                   }}
                 >
                   REGISTER
@@ -97,62 +114,62 @@ const Landing = () => {
             </View>
             <View
               style={{
-                display: 'flex',
-                flexDirection: 'row',
+                display: "flex",
+                flexDirection: "row",
                 flex: 0.1,
               }}
             >
               <Button
-                onPress={() => onSocialLink('https://www.dndsidekick.com')}
+                onPress={() => onSocialLink("https://www.dndsidekick.com")}
               >
                 <Image
-                  source={require('../assets/images/brand-discord.png')}
+                  source={require("../assets/images/brand-discord.png")}
                   resizeMode="cover"
                 />
               </Button>
               <Button
-                onPress={() => onSocialLink('https://twitter.com/DNDSidekick')}
+                onPress={() => onSocialLink("https://twitter.com/DNDSidekick")}
               >
                 <Image
-                  source={require('../assets/images/brand-twitter.png')}
+                  source={require("../assets/images/brand-twitter.png")}
                   resizeMode="cover"
                 />
               </Button>
               <Button
-                onPress={() => onSocialLink('https://www.dndsidekick.com')}
+                onPress={() => onSocialLink("https://www.dndsidekick.com")}
               >
                 <Image
-                  source={require('../assets/images/brand-url.png')}
+                  source={require("../assets/images/brand-url.png")}
                   resizeMode="cover"
                 />
               </Button>
               <Button
                 onPress={() =>
-                  onSocialLink('https://www.facebook.com/DNDSidekick')
+                  onSocialLink("https://www.facebook.com/DNDSidekick")
                 }
               >
                 <Image
-                  source={require('../assets/images/brand-facebook.png')}
+                  source={require("../assets/images/brand-facebook.png")}
                   resizeMode="cover"
                 />
               </Button>
             </View>
             <Text
               style={{
-                color: 'white',
+                color: "white",
                 opacity: 0.5,
-                fontFamily: 'NotoSansJP_300Light',
+                fontFamily: "NotoSansJP_300Light",
               }}
             >
               Copyright 2021 DNDSidekick
             </Text>
           </SafeAreaView>
         </ImageBackground>
-      </View>
-    )
+      </FadeInView>
+    );
   }
-  return null
-}
+  return null;
+};
 
 const styles = StyleSheet.create({
   button: {
@@ -161,13 +178,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 300,
     padding: 2,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   buttonText: {
-    color: 'black',
+    color: "black",
     letterSpacing: 2,
-    fontFamily: 'NotoSansJP_500Medium',
+    fontFamily: "NotoSansJP_500Medium",
   },
-})
+});
 
-export default Landing
+export default Landing;
