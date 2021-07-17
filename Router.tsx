@@ -1,5 +1,5 @@
 import React from "react";
-import { NativeRouter, Route } from "react-router-native";
+import { NativeRouter, Redirect, Route } from "react-router-native";
 import Landing from "./screens/Landing";
 //@ts-ignore
 import Stack from "react-router-native-stack";
@@ -10,6 +10,10 @@ import { UserSelectors } from "./redux/User/selectors";
 import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserActions } from "./redux/User/actions";
+import ForgotPassword from "./screens/Onboarding/ForgotPassword";
+import ForgotPasswordConfirmation from "./screens/Onboarding/ForgotPasswordConfirmation";
+import { DeepLinkComponent } from "./components/DeepLinkComponent";
+import ResetPassword from "./screens/Onboarding/ResetPassword";
 
 export const Router = () => {
   const loggedIn = UserSelectors.useSelectAuthenticated();
@@ -26,15 +30,33 @@ export const Router = () => {
       }
     });
   };
-
   return (
     <NativeRouter>
       <Stack>
+        <Route
+          exact
+          path="/forgot-password/reset/:code"
+          component={loggedIn ? Home : ResetPassword}
+        />
+        <Route
+          exact
+          path="/forgot-password/confirm"
+          component={loggedIn ? Home : ForgotPasswordConfirmation}
+        />
+        <Route
+          exact
+          path="/forgot-password"
+          component={loggedIn ? Home : ForgotPassword}
+        />
         <Route exact path="/login" component={loggedIn ? Home : Login} />
         <Route exact path="/register" component={loggedIn ? Home : Register} />
         <Route exact path="/home" component={Home} />
         <Route exact path="/" component={loggedIn ? Home : Landing} />
+        <Route path="*">
+          <Redirect to={loggedIn ? "/home" : "/"} />
+        </Route>
       </Stack>
+      <DeepLinkComponent />
     </NativeRouter>
   );
 };
