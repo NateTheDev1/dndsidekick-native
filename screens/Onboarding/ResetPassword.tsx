@@ -50,8 +50,8 @@ const ResetPassword = () => {
   const onSubmit = () => {
     setFormErrors({ password: "", confirmPassword: "" });
 
-    const passwordError = formValues.password.length >= 5;
-    const confirmError = formValues.password === formValues.confirmPassword;
+    const passwordError = formValues.password.length < 5;
+    const confirmError = formValues.password !== formValues.confirmPassword;
 
     setFormErrors({
       password: passwordError ? "Password must be at least 5 characters" : "",
