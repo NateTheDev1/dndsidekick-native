@@ -14,14 +14,23 @@ import {
 } from "@expo-google-fonts/noto-sans-jp";
 import { FadeInView } from "../../components/FadeInView";
 import { useState } from "react";
-import { Button, HelperText, TextInput } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  HelperText,
+  TextInput,
+} from "react-native-paper";
 import { COLOR_CONSTANTS } from "../../theme/color";
-import { Link, useHistory } from "react-router-native";
+import { Link, useHistory, useParams } from "react-router-native";
+import { useResetPasswordFromCodeMutation } from "../../business-domain/graphql";
 
 const ResetPassword = () => {
+  const { code }: { code: string } = useParams();
   const history = useHistory();
 
   const [viewPassword, setViewPassword] = useState(false);
+
+  const [resetPassword, resetPasswordData] = useResetPasswordFromCodeMutation();
 
   const [fontsLoaded] = useFonts({
     NotoSansJP_700Bold,
@@ -50,8 +59,15 @@ const ResetPassword = () => {
     });
 
     if (!passwordError && !confirmError) {
-      // send request
-      history.push("/login");
+      resetPassword({
+        variables: {
+          credentials: { code: code, newPassword: formValues.password },
+        },
+      }).then((res) => {
+        if (!res.errors) {
+          history.push("/login");
+        }
+      });
     }
   };
 
@@ -138,9 +154,32 @@ const ResetPassword = () => {
           >
             {formErrors.confirmPassword}
           </HelperText>
-          <Button onPress={onSubmit} style={styles.button}>
-            <Text style={styles.buttonText}>Reset Password</Text>
-          </Button>
+          {resetPasswordData.error &&
+            resetPasswordData.error?.message.length > 0 &&
+            !resetPasswordData.loading && (
+              <HelperText
+                type="error"
+                style={{
+                  marginTop: 25,
+                  alignSelf: "center",
+                  fontSize: 14,
+                }}
+                visible={true}
+              >
+                Code may be expired or invalid. Try sending another request.
+              </HelperText>
+            )}
+          {resetPasswordData.loading ? (
+            <ActivityIndicator
+              animating={true}
+              color={COLOR_CONSTANTS.accent.red}
+              size="large"
+            />
+          ) : (
+            <Button onPress={onSubmit} style={styles.button}>
+              <Text style={styles.buttonText}>Reset Password</Text>
+            </Button>
+          )}
           <Link component={TouchableOpacity} to="/login">
             <Text style={styles.linkStyle}>Cancel</Text>
           </Link>
