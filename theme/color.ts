@@ -14,6 +14,7 @@ export const COLOR_CONSTANTS = {
   paper: {
     light: "#FFFFFF",
     dark: "#101519",
+    nav: "#22272A",
   },
   accent: {
     green: "#00BB7C",
