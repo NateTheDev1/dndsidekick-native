@@ -1,5 +1,5 @@
 import React from "react";
-import { NativeRouter, Route } from "react-router-native";
+import { NativeRouter, Redirect, Route } from "react-router-native";
 import Landing from "./screens/Landing";
 //@ts-ignore
 import Stack from "react-router-native-stack";
@@ -52,6 +52,9 @@ export const Router = () => {
         <Route exact path="/register" component={loggedIn ? Home : Register} />
         <Route exact path="/home" component={Home} />
         <Route exact path="/" component={loggedIn ? Home : Landing} />
+        <Route path="*">
+          <Redirect to={loggedIn ? "/home" : "/"} />
+        </Route>
       </Stack>
       <DeepLinkComponent />
     </NativeRouter>
