@@ -3,7 +3,7 @@
     "name": "DNDSidekick",
     "slug": "dndsidekick-native",
     "scheme": "dndsidekick",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
