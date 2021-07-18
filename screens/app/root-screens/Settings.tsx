@@ -43,6 +43,10 @@ const Settings = () => {
       icon: {
         color: "white",
       },
+      input: {
+        color: "white",
+        backgroundColor: COLOR_CONSTANTS.background.dark,
+      },
     })
   );
 
@@ -69,6 +73,12 @@ const Settings = () => {
       },
       icon: {
         color: theme === "dark" ? "white" : "black",
+      },
+      input: {
+        color: theme === "dark" ? "white" : "black",
+        backgroundColor:
+          theme === "dark" ? COLOR_CONSTANTS.background.dark : "white",
+        borderColor: theme === "dark" ? "#BCBDBC" : "#878A8C",
       },
     });
   }, [theme]);

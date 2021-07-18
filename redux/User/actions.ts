@@ -12,6 +12,7 @@ import {
 import decode from "jwt-decode";
 import { RootActions } from "../types/action-types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGetUserLazyQuery } from "../../business-domain/graphql";
 
 export const UserActions: RootActions["user"] = {
   useLogin() {
@@ -50,23 +51,24 @@ export const UserActions: RootActions["user"] = {
   useFetchUser() {
     const dispatch = useDispatch();
 
-    // const [getUser] = useGetUserLazyQuery({
-    // 	onCompleted: data => {
-    // 		const action: FetchUser = {
-    // 			type: UserActionConstants.APP_FETCHED_USER,
-    // 			payload: data.getUser as any
-    // 		};
+    const [getUser] = useGetUserLazyQuery({
+      fetchPolicy: "no-cache",
+      onCompleted: (data) => {
+        const action: FetchUser = {
+          type: UserActionConstants.APP_FETCHED_USER,
+          payload: data.getUser as any,
+        };
 
-    // 		dispatch(action);
-    // 	}
-    // });
+        dispatch(action);
+      },
+    });
 
     return async () => {
       const token = (await AsyncStorage.getItem("@FIVE_E_TOKEN")!) as string;
 
       const jwt: { userId: number } = decode(token);
 
-      // getUser({ variables: { id: jwt.userId } });
+      getUser({ variables: { id: jwt.userId } });
     };
   },
   useSetLoading() {

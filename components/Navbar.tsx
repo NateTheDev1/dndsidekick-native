@@ -2,6 +2,7 @@ import React from "react";
 import { Image, SafeAreaView, TouchableOpacity, View } from "react-native";
 import { Link } from "react-router-native";
 import { COLOR_CONSTANTS } from "../theme/color";
+import { TopBarLogo } from "./icons/TopBarLogo";
 
 const Navbar = ({ showSettings }: { showSettings: boolean }) => {
   return (
@@ -18,12 +19,10 @@ const Navbar = ({ showSettings }: { showSettings: boolean }) => {
           style={{
             width: "33.3%",
             alignItems: "center",
+            marginBottom: 10,
           }}
         >
-          <Image
-            source={require("../assets/images/top-bar-logo.png")}
-            resizeMode="center"
-          />
+          <TopBarLogo />
         </View>
       )}
       {!showSettings && (
@@ -31,12 +30,10 @@ const Navbar = ({ showSettings }: { showSettings: boolean }) => {
           style={{
             width: "100%",
             alignItems: "center",
+            marginBottom: 10,
           }}
         >
-          <Image
-            source={require("../assets/images/top-bar-logo.png")}
-            resizeMode="center"
-          />
+          <TopBarLogo />
         </View>
       )}
       {showSettings && (
