@@ -22,6 +22,9 @@ export default function App() {
       require("./assets/images/brand-url.png"),
       require("./assets/images/landing-image.png"),
       require("./assets/images/landing-logo.png"),
+      require("./assets/images/top-bar-logo.png"),
+      require("./assets/images/mail-icon.png"),
+      require("./assets/images/dots-vertical.png"),
     ];
 
     const cacheImages = images.map((image) => {
