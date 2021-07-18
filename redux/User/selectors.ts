@@ -23,4 +23,9 @@ export const UserSelectors: RootSelectors["user"] = {
 
     return user;
   },
+  useSelectTheme: () => {
+    const theme = useSelector((state: RootState) => state.user.theme);
+
+    return theme;
+  },
 };

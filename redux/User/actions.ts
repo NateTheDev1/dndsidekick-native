@@ -5,6 +5,8 @@ import {
   LogoutUser,
   SetLoading,
   FetchUser,
+  UserState,
+  SetTheme,
 } from "./types";
 
 import decode from "jwt-decode";
@@ -74,6 +76,18 @@ export const UserActions: RootActions["user"] = {
       const action: SetLoading = {
         type: UserActionConstants.SET_LOADING,
         payload: loadState,
+      };
+
+      dispatch(action);
+    };
+  },
+  useSetTheme() {
+    const dispatch = useDispatch();
+
+    return (theme: UserState["theme"]) => {
+      const action: SetTheme = {
+        type: UserActionConstants.SET_THEME,
+        payload: theme,
       };
 
       dispatch(action);
