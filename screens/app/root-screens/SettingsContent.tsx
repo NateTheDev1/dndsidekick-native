@@ -1,5 +1,5 @@
 import React from "react";
-import { Linking, Text, TouchableOpacity, View } from "react-native";
+import { Linking, Text, TouchableOpacity } from "react-native";
 import { RightArrowIcon } from "../../../components/icons/RightArrowIcon";
 //@ts-ignore
 import Hr from "react-native-hr-plus";
@@ -7,18 +7,22 @@ import { useHistory } from "react-router-native";
 import { UserActions } from "../../../redux/User/actions";
 import { COLOR_CONSTANTS } from "../../../theme/color";
 import { useState } from "react";
-import { HelperText, TextInput } from "react-native-paper";
-import { useGetUserQuery } from "../../../business-domain/graphql";
+import { Button, HelperText, TextInput } from "react-native-paper";
+import { useSendPasswordResetMutation } from "../../../business-domain/graphql";
 import { UserSelectors } from "../../../redux/User/selectors";
-import { useEffect } from "react";
+import { ScrollView } from "react-native";
 
 export const SettingsContent = ({ styles }: { styles: any }) => {
   const history = useHistory();
   const logoutUser = UserActions.useLogout();
   const userName = UserSelectors.useSelectUser()?.name;
+  const userEmail = UserSelectors.useSelectUser()?.email;
+
+  const [sendReset, sendResetData] = useSendPasswordResetMutation();
 
   const [formValues, setFormValues] = useState({ name: userName });
   const [formErrors, setFormErrors] = useState({ name: "" });
+  const [requestedReset, setRequestedReset] = useState(false);
 
   const onClickLink = (url: string) => {
     if (Linking.canOpenURL(url)) {
@@ -41,8 +45,14 @@ export const SettingsContent = ({ styles }: { styles: any }) => {
     }
   };
 
+  const sendPasswordReset = () => {
+    if (userEmail) {
+      sendReset({ variables: { email: userEmail } });
+    }
+  };
+
   return (
-    <View>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Text style={styles.header}>SETTINGS</Text>
       <TouchableOpacity
         onPress={() => onClickLink("https://www.dndsidekick.com")}
@@ -107,7 +117,7 @@ export const SettingsContent = ({ styles }: { styles: any }) => {
         returnKeyType="done"
         clearButtonMode="unless-editing"
         value={formValues.name}
-        style={{ marginTop: 50 }}
+        style={{ marginTop: 20 }}
         onChangeText={(text) => setFormValues({ ...formValues, name: text })}
         error={formErrors.name.length > 0}
         theme={{
@@ -123,6 +133,40 @@ export const SettingsContent = ({ styles }: { styles: any }) => {
       <HelperText type="error" visible={formErrors.name.length > 0}>
         {formErrors.name}
       </HelperText>
-    </View>
+      <Button
+        onPress={() => onSubmit()}
+        style={styles.button}
+        disabled={userName === formValues.name}
+      >
+        <Text style={styles.buttonText}>Save Changes</Text>
+      </Button>
+      <Text style={{ ...styles.text, marginTop: 40 }}>Update Password</Text>
+      <Text
+        style={{
+          color: "white",
+          textDecorationLine: "underline",
+          ...styles.text,
+          marginTop: 0,
+          fontSize: 16,
+        }}
+      >
+        Change Email Address
+      </Text>
+      <Text style={{ ...styles.text, opacity: 0.5, marginTop: 10 }}>
+        Update Password
+      </Text>
+      <Text
+        style={{
+          color: "white",
+          textDecorationLine: "underline",
+          ...styles.text,
+          marginTop: 0,
+          fontSize: 16,
+          opacity: 0.5,
+        }}
+      >
+        Currently Unavailable
+      </Text>
+    </ScrollView>
   );
 };

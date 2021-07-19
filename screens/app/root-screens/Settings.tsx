@@ -47,6 +47,23 @@ const Settings = () => {
         color: "white",
         backgroundColor: COLOR_CONSTANTS.background.dark,
       },
+      button: {
+        backgroundColor: COLOR_CONSTANTS.accent.green,
+        padding: 2,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+      },
+      buttonText: {
+        color: "white",
+        textTransform: "capitalize",
+        fontFamily: "NotoSansJP_400Regular",
+      },
     })
   );
 
@@ -85,7 +102,7 @@ const Settings = () => {
 
   if (fontsLoaded) {
     return (
-      <BarContainer showSettings={false}>
+      <BarContainer showSettings={false} showBack={true}>
         <View style={{ flex: 1, ...styles.background }}>
           <SettingsContent styles={styles} />
         </View>

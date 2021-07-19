@@ -1,10 +1,23 @@
 import React from "react";
 import { Image, SafeAreaView, TouchableOpacity, View } from "react-native";
-import { Link } from "react-router-native";
+import { Link, useHistory } from "react-router-native";
 import { COLOR_CONSTANTS } from "../theme/color";
+import { BackButtonIcon } from "./icons/BackButtonIcon";
 import { TopBarLogo } from "./icons/TopBarLogo";
 
-const Navbar = ({ showSettings }: { showSettings: boolean }) => {
+const Navbar = ({
+  showSettings,
+  showBack = false,
+}: {
+  showSettings: boolean;
+  showBack?: boolean;
+}) => {
+  const history = useHistory();
+
+  const onBack = () => {
+    history.goBack();
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -13,29 +26,31 @@ const Navbar = ({ showSettings }: { showSettings: boolean }) => {
         justifyContent: "space-between",
       }}
     >
-      {showSettings && <View style={{ width: "33.3%" }}></View>}
-      {showSettings && (
+      {showSettings && !showBack && <View style={{ width: "33.3%" }}></View>}
+      {showBack && (
         <View
+          onTouchStart={() => onBack()}
           style={{
+            display: "flex",
             width: "33.3%",
-            alignItems: "center",
-            marginBottom: 10,
+            alignItems: "flex-start",
+            paddingLeft: 20,
           }}
         >
-          <TopBarLogo />
+          <BackButtonIcon color={"white"} />
         </View>
       )}
-      {!showSettings && (
-        <View
-          style={{
-            width: "100%",
-            alignItems: "center",
-            marginBottom: 10,
-          }}
-        >
-          <TopBarLogo />
-        </View>
-      )}
+      <View
+        style={{
+          width: "33.3%",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
+        <TopBarLogo />
+      </View>
+      {!showSettings && showBack && <View style={{ width: "33.3%" }}></View>}
+
       {showSettings && (
         <Link
           to="/home/settings"

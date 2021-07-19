@@ -8,9 +8,11 @@ import Navbar from "./Navbar";
 const BarContainer = ({
   children,
   showSettings = true,
+  showBack = false,
 }: {
   children: any;
   showSettings?: boolean;
+  showBack?: boolean;
 }) => {
   const setTheme = UserActions.useSetTheme();
 
@@ -29,7 +31,7 @@ const BarContainer = ({
 
   return (
     <View style={{ flex: 1, display: "flex" }}>
-      <Navbar showSettings={showSettings} />
+      <Navbar showSettings={showSettings} showBack={showBack} />
       {children}
       <BottomNav />
     </View>
