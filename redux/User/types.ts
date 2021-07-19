@@ -1,11 +1,14 @@
 // STATE
 
+import { GetUserQuery } from "../../business-domain/graphql";
+
 export type UserState = {
   authenticated: boolean;
   token: string;
   userId: number | undefined;
-  user: any | undefined;
+  user: GetUserQuery["getUser"] | undefined;
   loading: boolean;
+  theme: "light" | "dark";
 };
 
 // ACTIONS
@@ -15,6 +18,7 @@ export enum UserActionConstants {
   USER_LOGGED_OUT = "USER_LOGGED_OUT",
   APP_FETCHED_USER = "APP_FETCHED_USER",
   SET_LOADING = "SET_LOADING",
+  SET_THEME = "SET_THEME",
 }
 
 export interface FetchUser {
@@ -36,11 +40,17 @@ export interface SetLoading {
   payload: UserState["loading"];
 }
 
+export interface SetTheme {
+  type: UserActionConstants.SET_THEME;
+  payload: UserState["theme"];
+}
+
 export type UserActions = {
   useLogout(): () => void;
   useLogin(): (token: string) => Promise<boolean>;
   useFetchUser(): () => Promise<void>;
   useSetLoading(): (loadState: boolean) => void;
+  useSetTheme(): (theme: UserState["theme"]) => void;
 };
 
 // SELECTORS
@@ -50,4 +60,5 @@ export type UserSelectors = {
   useSelectUserLoading: () => UserState["loading"];
   useSelectUserId: () => UserState["userId"];
   useSelectUser: () => UserState["user"];
+  useSelectTheme: () => UserState["theme"];
 };
