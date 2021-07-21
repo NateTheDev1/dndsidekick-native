@@ -100,6 +100,31 @@ export type CharacterStepInput = {
   character: CharacterInput;
 };
 
+export type DevUpdate = {
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  version?: Maybe<Scalars['String']>;
+  releaseDate?: Maybe<Scalars['String']>;
+  tags: Array<Maybe<Scalars['String']>>;
+  paragraphs: Array<Maybe<Scalars['String']>>;
+};
+
+export type DevUpdateInput = {
+  title: Scalars['String'];
+  version?: Maybe<Scalars['String']>;
+  releaseDate?: Maybe<Scalars['String']>;
+  tags: Array<Maybe<Scalars['String']>>;
+  paragraphs: Array<Maybe<Scalars['String']>>;
+};
+
+export type DevUpdatePatchInput = {
+  title?: Maybe<Scalars['String']>;
+  version?: Maybe<Scalars['String']>;
+  releaseDate?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  paragraphs?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
 export type InitCharacterInput = {
   userId: Scalars['Int'];
   character: CharacterInput;
@@ -125,12 +150,16 @@ export type Mutation = {
   deleteSoundboard: Scalars['Boolean'];
   deleteSoundboardLink: Scalars['Boolean'];
   addSoundboardLink: Scalars['Boolean'];
+  publishUpdate?: Maybe<DevUpdate>;
+  deleteUpdate: Scalars['Boolean'];
+  editUpdate: DevUpdate;
   signup: User;
   login: User;
   appleLogin: User;
   waitListSignup: Scalars['Boolean'];
   resetPasswordFromCode: Scalars['Boolean'];
   sendPasswordReset: Scalars['Boolean'];
+  updateUser: User;
 };
 
 
@@ -169,6 +198,22 @@ export type MutationAddSoundboardLinkArgs = {
 };
 
 
+export type MutationPublishUpdateArgs = {
+  update: DevUpdateInput;
+};
+
+
+export type MutationDeleteUpdateArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationEditUpdateArgs = {
+  update: DevUpdatePatchInput;
+  id: Scalars['Int'];
+};
+
+
 export type MutationSignupArgs = {
   user: SignupInput;
 };
@@ -198,6 +243,12 @@ export type MutationSendPasswordResetArgs = {
   email: Scalars['String'];
 };
 
+
+export type MutationUpdateUserArgs = {
+  fullName: Scalars['String'];
+  id: Scalars['Int'];
+};
+
 export type PasswordResetInput = {
   code: Scalars['String'];
   newPassword: Scalars['String'];
@@ -208,6 +259,7 @@ export type Query = {
   getInventory: Inventory;
   getSoundboards: Array<Maybe<Soundboard>>;
   getSoundboard: Soundboard;
+  getLatestUpdate?: Maybe<DevUpdate>;
   getUser: User;
 };
 
@@ -300,6 +352,14 @@ export type SignupMutationVariables = Exact<{
 
 
 export type SignupMutation = { signup: { id: number, token?: Maybe<string> } };
+
+export type UpdateUserMutationVariables = Exact<{
+  fullName: Scalars['String'];
+  id: Scalars['Int'];
+}>;
+
+
+export type UpdateUserMutation = { updateUser: { id: number } };
 
 
 export const GetUserDocument = gql`
@@ -470,3 +530,37 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($fullName: String!, $id: Int!) {
+  updateUser(fullName: $fullName, id: $id) {
+    id
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      fullName: // value for 'fullName'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
