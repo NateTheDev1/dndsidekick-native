@@ -5,13 +5,13 @@ import {
   NotoSansJP_400Regular,
   NotoSansJP_700Bold,
 } from "@expo-google-fonts/noto-sans-jp";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
 import { COLOR_CONSTANTS } from "../../../theme/color";
 import { useState } from "react";
 import BarContainer from "../../../components/BarContainer";
 import { useGetLatestUpdateQuery } from "../../../business-domain/graphql";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, Button } from "react-native-paper";
 import moment from "moment";
 
 function isFutureDate(value: any) {
@@ -58,6 +58,23 @@ const Updates = () => {
       hr: {
         color: theme === "dark" ? "white" : "black",
       },
+      button: {
+        backgroundColor: COLOR_CONSTANTS.accent.green,
+        padding: 2,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+      },
+      buttonText: {
+        color: "white",
+        fontFamily: "NotoSansJP_500Medium",
+        textTransform: "none",
+      },
     })
   );
 
@@ -93,20 +110,72 @@ const Updates = () => {
   if (fontsLoaded) {
     return (
       <BarContainer showSettings={false} showBack={true}>
-        <View style={{ flex: 1, overflow: "scroll", ...styles.background }}>
+        <ScrollView
+          style={{ flex: 1, overflow: "scroll", ...styles.background }}
+        >
           {!loading && data?.getLatestUpdate ? (
             <>
               <Text style={{ ...styles.header }}>
                 {data.getLatestUpdate?.title}
               </Text>
               {data.getLatestUpdate.releaseDate && (
-                <Text style={{ ...styles.text }}>
+                <Text style={{ ...styles.text, marginBottom: 0 }}>
                   {isFutureDate(data.getLatestUpdate.releaseDate)
                     ? "Will release on"
                     : "Released"}{" "}
                   {formatDate(data.getLatestUpdate.releaseDate)}
                 </Text>
               )}
+              <Text style={{ ...styles.text, opacity: 0.7, marginBottom: 0 }}>
+                Version {data.getLatestUpdate.version}
+              </Text>
+              <View
+                style={{ display: "flex", flexDirection: "row", marginTop: 25 }}
+              >
+                {data.getLatestUpdate.tags.map((tag, key) => (
+                  <View
+                    key={key}
+                    style={{
+                      backgroundColor: tag?.includes("Bug")
+                        ? COLOR_CONSTANTS.accent.red
+                        : COLOR_CONSTANTS.accent.green,
+                      padding: 10,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        ...styles.text,
+                        marginBottom: 0,
+                        marginTop: 0,
+                        fontSize: 12,
+                      }}
+                    >
+                      {tag}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              {data.getLatestUpdate.paragraphs.map((p, key) => {
+                return (
+                  <Text
+                    key={key}
+                    style={{ ...styles.text, lineHeight: 40, marginBottom: 10 }}
+                  >
+                    {p}
+                  </Text>
+                );
+              })}
+              <Button
+                onPress={() => console.log("here")}
+                style={{ ...styles.button, marginTop: 25 }}
+              >
+                <Text style={styles.buttonText}>View More Updates</Text>
+              </Button>
             </>
           ) : (
             <View>
@@ -124,7 +193,7 @@ const Updates = () => {
               size="large"
             />
           )}
-        </View>
+        </ScrollView>
       </BarContainer>
     );
   }
