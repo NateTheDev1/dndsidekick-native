@@ -17,6 +17,28 @@ export type Scalars = {
 };
 
 
+export type Article = {
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+  author: Scalars['String'];
+  views: Scalars['Int'];
+  content?: Maybe<Array<Maybe<ArticleContent>>>;
+};
+
+export type ArticleContent = {
+  id: Scalars['Int'];
+  articleId: Scalars['Int'];
+  type: Scalars['String'];
+  fontSize: Scalars['String'];
+  imageURL?: Maybe<Scalars['String']>;
+  order: Scalars['Int'];
+};
+
+export type ArticleOrder =
+  | 'TOP'
+  | 'ALL';
+
 export type CacheControlScope =
   | 'PUBLIC'
   | 'PRIVATE';
@@ -100,6 +122,22 @@ export type CharacterStepInput = {
   character: CharacterInput;
 };
 
+export type CreateArticleContentBlock = {
+  articleId: Scalars['Int'];
+  type: Scalars['String'];
+  fontSize: Scalars['String'];
+  imageURL?: Maybe<Scalars['String']>;
+  order: Scalars['Int'];
+};
+
+export type CreateArticleInput = {
+  title: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+  author: Scalars['String'];
+  views: Scalars['Int'];
+  content?: Maybe<Array<Maybe<CreateArticleContentBlock>>>;
+};
+
 export type DevUpdate = {
   id: Scalars['Int'];
   title: Scalars['String'];
@@ -153,6 +191,8 @@ export type Mutation = {
   publishUpdate?: Maybe<DevUpdate>;
   deleteUpdate: Scalars['Boolean'];
   editUpdate: DevUpdate;
+  createArticle: Article;
+  deleteArticle: Scalars['Boolean'];
   signup: User;
   login: User;
   appleLogin: User;
@@ -214,6 +254,16 @@ export type MutationEditUpdateArgs = {
 };
 
 
+export type MutationCreateArticleArgs = {
+  article: CreateArticleInput;
+};
+
+
+export type MutationDeleteArticleArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type MutationSignupArgs = {
   user: SignupInput;
 };
@@ -260,6 +310,8 @@ export type Query = {
   getSoundboards: Array<Maybe<Soundboard>>;
   getSoundboard: Soundboard;
   getLatestUpdate?: Maybe<DevUpdate>;
+  getArticle: Article;
+  getArticles: Array<Maybe<Article>>;
   getUser: User;
 };
 
@@ -276,6 +328,16 @@ export type QueryGetInventoryArgs = {
 
 export type QueryGetSoundboardArgs = {
   soundboardId: Scalars['Int'];
+};
+
+
+export type QueryGetArticleArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryGetArticlesArgs = {
+  params: ArticleOrder;
 };
 
 
@@ -317,6 +379,11 @@ export type User = {
   token?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
 };
+
+export type GetLatestUpdateQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLatestUpdateQuery = { getLatestUpdate?: Maybe<{ id: number, title: string, version?: Maybe<string>, releaseDate?: Maybe<string>, tags: Array<Maybe<string>>, paragraphs: Array<Maybe<string>> }> };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -362,6 +429,45 @@ export type UpdateUserMutationVariables = Exact<{
 export type UpdateUserMutation = { updateUser: { id: number } };
 
 
+export const GetLatestUpdateDocument = gql`
+    query GetLatestUpdate {
+  getLatestUpdate {
+    id
+    title
+    version
+    releaseDate
+    tags
+    paragraphs
+  }
+}
+    `;
+
+/**
+ * __useGetLatestUpdateQuery__
+ *
+ * To run a query within a React component, call `useGetLatestUpdateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestUpdateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestUpdateQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLatestUpdateQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>(GetLatestUpdateDocument, options);
+      }
+export function useGetLatestUpdateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>(GetLatestUpdateDocument, options);
+        }
+export type GetLatestUpdateQueryHookResult = ReturnType<typeof useGetLatestUpdateQuery>;
+export type GetLatestUpdateLazyQueryHookResult = ReturnType<typeof useGetLatestUpdateLazyQuery>;
+export type GetLatestUpdateQueryResult = Apollo.QueryResult<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>;
 export const GetUserDocument = gql`
     query GetUser($id: Int!) {
   getUser(id: $id) {

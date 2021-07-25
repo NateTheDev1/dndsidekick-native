@@ -1,19 +1,32 @@
+import React from "react";
+import { UserSelectors } from "../../../redux/User/selectors";
 import {
   useFonts,
   NotoSansJP_400Regular,
   NotoSansJP_700Bold,
 } from "@expo-google-fonts/noto-sans-jp";
-import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import BarContainer from "../../../components/BarContainer";
-import { UserSelectors } from "../../../redux/User/selectors";
 import { COLOR_CONSTANTS } from "../../../theme/color";
-import { HomeContent } from "./HomeContent";
+import { useState } from "react";
+import BarContainer from "../../../components/BarContainer";
+import { useGetLatestUpdateQuery } from "../../../business-domain/graphql";
+import { ActivityIndicator } from "react-native-paper";
+import moment from "moment";
 
-const Home = () => {
+function isFutureDate(value: any) {
+  const d_now = new Date();
+  const d_inp = new Date(value);
+  return d_now.getTime() <= d_inp.getTime();
+}
+
+const Updates = () => {
   const theme = UserSelectors.useSelectTheme();
+
+  const { data, loading, error } = useGetLatestUpdateQuery({
+    fetchPolicy: "no-cache",
+  });
+
   const [fontsLoaded] = useFonts({
     NotoSansJP_700Bold,
     NotoSansJP_400Regular,
@@ -34,6 +47,7 @@ const Home = () => {
         fontFamily: "NotoSansJP_700Bold",
         letterSpacing: 5,
         fontSize: 20,
+        textTransform: "uppercase",
       },
       text: {
         marginVertical: 25,
@@ -44,25 +58,12 @@ const Home = () => {
       hr: {
         color: theme === "dark" ? "white" : "black",
       },
-      articleCard: {
-        backgroundColor:
-          theme === "dark"
-            ? COLOR_CONSTANTS.paper.dark
-            : COLOR_CONSTANTS.paper.light,
-      },
-      articleText: {
-        color: theme === "dark" ? "white" : "black",
-        fontFamily: "NotoSansJP_400Regular",
-      },
-      articleHeader: {
-        color: theme === "dark" ? "white" : "black",
-        fontFamily: "NotoSansJP_700Bold",
-      },
-      articleArrow: {
-        backgroundColor: theme === "dark" ? "white" : "black",
-      },
     })
   );
+
+  const formatDate = (date: string) => {
+    return moment(date).fromNow();
+  };
 
   useEffect(() => {
     setStyles({
@@ -86,32 +87,43 @@ const Home = () => {
         ...styles.header,
         color: theme === "dark" ? "white" : "black",
       },
-      articleCard: {
-        ...styles.articleCard,
-        backgroundColor:
-          theme === "dark"
-            ? COLOR_CONSTANTS.paper.dark
-            : COLOR_CONSTANTS.paper.light,
-      },
-      articleText: {
-        ...styles.articleText,
-        color: theme === "dark" ? "white" : "black",
-      },
-      articleHeader: {
-        ...styles.articleHeader,
-        color: theme === "dark" ? "white" : "black",
-      },
-      articleArrow: {
-        backgroundColor: theme === "dark" ? "white" : "black",
-      },
     });
   }, [theme]);
 
   if (fontsLoaded) {
     return (
-      <BarContainer>
+      <BarContainer showSettings={false} showBack={true}>
         <View style={{ flex: 1, overflow: "scroll", ...styles.background }}>
-          <HomeContent styles={styles} />
+          {!loading && data?.getLatestUpdate ? (
+            <>
+              <Text style={{ ...styles.header }}>
+                {data.getLatestUpdate?.title}
+              </Text>
+              {data.getLatestUpdate.releaseDate && (
+                <Text style={{ ...styles.text }}>
+                  {isFutureDate(data.getLatestUpdate.releaseDate)
+                    ? "Will release on"
+                    : "Released"}{" "}
+                  {formatDate(data.getLatestUpdate.releaseDate)}
+                </Text>
+              )}
+            </>
+          ) : (
+            <View>
+              <Text
+                style={{ textAlign: "center", ...styles.text, fontSize: 15 }}
+              >
+                No updates available.
+              </Text>
+            </View>
+          )}
+          {loading && (
+            <ActivityIndicator
+              animating={true}
+              color={COLOR_CONSTANTS.accent.red}
+              size="large"
+            />
+          )}
         </View>
       </BarContainer>
     );
@@ -120,4 +132,4 @@ const Home = () => {
   return <></>;
 };
 
-export default Home;
+export default Updates;
