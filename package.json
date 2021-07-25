@@ -36,7 +36,8 @@
     "redux-thunk": "^2.3.0",
     "subscriptions-transport-ws": "^0.9.19",
     "tailwind-rn": "^3.0.1",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "expo-constants": "~11.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
