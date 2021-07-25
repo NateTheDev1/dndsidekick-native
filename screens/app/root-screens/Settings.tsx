@@ -23,28 +23,31 @@ const Settings = () => {
       background: {
         paddingTop: 30,
         paddingHorizontal: 15,
-        backgroundColor: COLOR_CONSTANTS.background.dark,
+        backgroundColor:
+          theme === "dark"
+            ? COLOR_CONSTANTS.background.dark
+            : COLOR_CONSTANTS.background.light,
       },
       header: {
         fontFamily: "NotoSansJP_700Bold",
         fontSize: 20,
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
         letterSpacing: 5,
       },
       text: {
         marginVertical: 25,
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
         fontSize: 15,
         fontFamily: "NotoSansJP_400Regular",
       },
       hr: {
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
       },
       icon: {
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
       },
       input: {
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
         backgroundColor: COLOR_CONSTANTS.background.dark,
       },
       button: {

@@ -33,7 +33,7 @@ export const Router = () => {
   };
   return (
     <NativeRouter>
-      <Stack>
+      <Stack animationType="fade-vertical">
         <Route
           exact
           path="/home/settings"
