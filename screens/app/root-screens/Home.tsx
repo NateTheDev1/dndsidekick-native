@@ -25,22 +25,42 @@ const Home = () => {
       background: {
         paddingTop: 30,
         paddingHorizontal: 15,
-        backgroundColor: COLOR_CONSTANTS.background.dark,
+        backgroundColor:
+          theme === "dark"
+            ? COLOR_CONSTANTS.background.dark
+            : COLOR_CONSTANTS.background.light,
       },
       header: {
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
         fontFamily: "NotoSansJP_700Bold",
         letterSpacing: 5,
         fontSize: 20,
       },
       text: {
         marginVertical: 25,
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
         fontSize: 15,
         fontFamily: "NotoSansJP_400Regular",
       },
       hr: {
-        color: "white",
+        color: theme === "dark" ? "white" : "black",
+      },
+      articleCard: {
+        backgroundColor:
+          theme === "dark"
+            ? COLOR_CONSTANTS.paper.dark
+            : COLOR_CONSTANTS.paper.light,
+      },
+      articleText: {
+        color: theme === "dark" ? "white" : "black",
+        fontFamily: "NotoSansJP_400Regular",
+      },
+      articleHeader: {
+        color: theme === "dark" ? "white" : "black",
+        fontFamily: "NotoSansJP_700Bold",
+      },
+      articleArrow: {
+        backgroundColor: theme === "dark" ? "white" : "black",
       },
     })
   );
@@ -66,6 +86,24 @@ const Home = () => {
       header: {
         ...styles.header,
         color: theme === "dark" ? "white" : "black",
+      },
+      articleCard: {
+        ...styles.articleCard,
+        backgroundColor:
+          theme === "dark"
+            ? COLOR_CONSTANTS.paper.dark
+            : COLOR_CONSTANTS.paper.light,
+      },
+      articleText: {
+        ...styles.articleText,
+        color: theme === "dark" ? "white" : "black",
+      },
+      articleHeader: {
+        ...styles.articleHeader,
+        color: theme === "dark" ? "white" : "black",
+      },
+      articleArrow: {
+        backgroundColor: theme === "dark" ? "white" : "black",
       },
     });
   }, [theme]);

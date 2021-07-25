@@ -7,6 +7,8 @@ import Hr from "react-native-hr-plus";
 import { DevUpdateButton } from "../../../components/DevUpdateButton";
 import { Link } from "react-router-native";
 import { ArticleCard } from "../../../components/ArticleCard";
+import { Button } from "react-native-paper";
+import { COLOR_CONSTANTS } from "../../../theme/color";
 
 export const HomeContent = ({ styles }: { styles: any }) => {
   const userName = UserSelectors.useSelectUser()?.name;
@@ -29,29 +31,78 @@ export const HomeContent = ({ styles }: { styles: any }) => {
       <Link component={TouchableOpacity} to="/updates">
         <DevUpdateButton />
       </Link>
-      <Text
+      <View
         style={{
-          ...styles.header,
-          fontSize: 18,
+          display: "flex",
+          flexDirection: "row",
           marginTop: 32,
-          opacity: 0.8,
-          letterSpacing: 3,
+          justifyContent: "space-between",
         }}
       >
-        COMMUNITY
-      </Text>
+        <Text
+          style={{
+            ...styles.header,
+            fontSize: 18,
+            opacity: 0.8,
+            letterSpacing: 3,
+          }}
+        >
+          COMMUNITY
+        </Text>
+        <TouchableOpacity
+          onPress={() => console.log("route to articles")}
+          style={{
+            padding: 5,
+            width: "20%",
+            alignItems: "center",
+            borderRadius: 5,
+            backgroundColor: COLOR_CONSTANTS.accent.red,
+          }}
+        >
+          <Text
+            style={{ ...styles.articleHeader, fontSize: 12, color: "white" }}
+          >
+            More
+          </Text>
+        </TouchableOpacity>
+      </View>
       <ArticleCard
         article={{
           title: "Tips For Character Creation",
           views: 3900,
-          redirect: "/",
+          redirect: "https://google.com",
           author: "Elean Jane",
           top: true,
         }}
-        backgroundColor="white"
+        backgroundColor={styles.articleCard.backgroundColor}
         style={{ marginTop: 20 }}
+        styles={styles}
       />
-      <Hr color={styles.hr.color} style={{ opacity: 0.5, marginTop: 35 }} />
+      <Hr color={styles.hr.color} style={{ opacity: 0.5, marginTop: 30 }} />
+      <ArticleCard
+        article={{
+          title: "Tips For Character Creation 2",
+          views: 1200,
+          redirect: "/",
+          author: "Elean Jane",
+          top: false,
+        }}
+        backgroundColor={styles.articleCard.backgroundColor}
+        style={{ marginTop: 20 }}
+        styles={styles}
+      />
+      <ArticleCard
+        article={{
+          title: "Tips For Character Creation 3",
+          views: 120,
+          redirect: "/",
+          author: "Elean Jane",
+          top: false,
+        }}
+        backgroundColor={styles.articleCard.backgroundColor}
+        style={{ marginTop: 20 }}
+        styles={styles}
+      />
     </ScrollView>
   );
 };

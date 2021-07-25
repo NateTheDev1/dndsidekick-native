@@ -28,6 +28,14 @@ export const DevUpdateButton = () => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.4,
+          shadowRadius: 3.84,
+          elevation: 5,
         }}
       >
         <View

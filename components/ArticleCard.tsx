@@ -1,6 +1,9 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Link } from "react-router-native";
+import { COLOR_CONSTANTS } from "../theme/color";
+import { canOpenURL, openURL } from "expo-linking";
+import { RightArrowIcon } from "./icons/RightArrowIcon";
 
 function abbreviateNumber(value: number) {
   var newValue: any = value;
@@ -29,6 +32,7 @@ export const ArticleCard = ({
   article,
   backgroundColor,
   style = {},
+  styles,
 }: {
   article: {
     title: string;
@@ -39,27 +43,77 @@ export const ArticleCard = ({
   };
   backgroundColor: string;
   style?: any;
+  styles: any;
 }) => {
-  return (
-    <Link to={article.redirect} component={TouchableOpacity}>
-      <View
-        style={{
-          ...style,
-          backgroundColor,
-          padding: 10,
-          paddingTop: 20,
-          borderRadius: 5,
-        }}
-      >
-        <View>
-          <Text>{article.title}</Text>
-          <View>
-            <Text>By {article.author}</Text>
-            <Text>{abbreviateNumber(article.views)}</Text>
-          </View>
+  const handleOpenUrl = () => {
+    if (canOpenURL(article.redirect)) {
+      openURL(article.redirect);
+    }
+  };
+
+  const content = (
+    <View
+      style={{
+        ...style,
+        backgroundColor,
+        padding: 20,
+        borderRadius: 5,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 3.84,
+        elevation: 5,
+      }}
+    >
+      <View>
+        <Text style={{ ...styles.articleHeader }}>{article.title}</Text>
+        <View style={{ display: "flex", flexDirection: "row", marginTop: 10 }}>
+          <Text style={{ ...styles.articleText, fontSize: 15 }}>
+            By {article.author}
+          </Text>
+          <Text style={{ ...styles.articleText, marginLeft: 10, fontSize: 15 }}>
+            {abbreviateNumber(article.views)}
+          </Text>
         </View>
-        <View>{/* ArrowIcon */}</View>
+        {article.top && (
+          <View
+            style={{
+              marginTop: 15,
+              padding: 5,
+              width: "50%",
+              alignItems: "center",
+              borderRadius: 5,
+              backgroundColor: COLOR_CONSTANTS.accent.red,
+            }}
+          >
+            <Text
+              style={{ ...styles.articleHeader, fontSize: 13, color: "white" }}
+            >
+              TRENDING
+            </Text>
+          </View>
+        )}
       </View>
-    </Link>
+      <View style={{ width: "10%", opacity: 0.7 }}>
+        <RightArrowIcon color={styles.articleArrow.backgroundColor} />
+      </View>
+    </View>
   );
+
+  if (article.redirect.includes("http")) {
+    return <View onTouchStart={handleOpenUrl}>{content}</View>;
+  } else {
+    return (
+      <Link to={article.redirect} component={TouchableOpacity}>
+        {content}
+      </Link>
+    );
+  }
 };
