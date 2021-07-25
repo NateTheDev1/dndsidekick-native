@@ -6,8 +6,7 @@ import {
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
 import BarContainer from "../../../components/BarContainer";
 import { UserSelectors } from "../../../redux/User/selectors";
 import { COLOR_CONSTANTS } from "../../../theme/color";

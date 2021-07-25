@@ -15,6 +15,7 @@ import ForgotPasswordConfirmation from "./screens/Onboarding/ForgotPasswordConfi
 import { DeepLinkComponent } from "./components/DeepLinkComponent";
 import ResetPassword from "./screens/Onboarding/ResetPassword";
 import Settings from "./screens/app/root-screens/Settings";
+import Updates from "./screens/app/root-screens/Updates";
 
 export const Router = () => {
   const loggedIn = UserSelectors.useSelectAuthenticated();
@@ -34,6 +35,7 @@ export const Router = () => {
   return (
     <NativeRouter>
       <Stack animationType="fade-vertical">
+        <Route exact path="/updates" component={loggedIn ? Updates : Landing} />
         <Route
           exact
           path="/home/settings"
