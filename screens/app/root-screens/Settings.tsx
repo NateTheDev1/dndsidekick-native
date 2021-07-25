@@ -1,18 +1,17 @@
 import {
   useFonts,
-  NotoSansJP_400Regular,
   NotoSansJP_700Bold,
+  NotoSansJP_400Regular,
 } from "@expo-google-fonts/noto-sans-jp";
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import BarContainer from "../../../components/BarContainer";
 import { UserSelectors } from "../../../redux/User/selectors";
 import { COLOR_CONSTANTS } from "../../../theme/color";
-import { HomeContent } from "./HomeContent";
+import { SettingsContent } from "./SettingsContent";
 
-const Home = () => {
+const Settings = () => {
   const theme = UserSelectors.useSelectTheme();
   const [fontsLoaded] = useFonts({
     NotoSansJP_700Bold,
@@ -30,10 +29,10 @@ const Home = () => {
             : COLOR_CONSTANTS.background.light,
       },
       header: {
-        color: theme === "dark" ? "white" : "black",
         fontFamily: "NotoSansJP_700Bold",
-        letterSpacing: 5,
         fontSize: 20,
+        color: theme === "dark" ? "white" : "black",
+        letterSpacing: 5,
       },
       text: {
         marginVertical: 25,
@@ -44,22 +43,29 @@ const Home = () => {
       hr: {
         color: theme === "dark" ? "white" : "black",
       },
-      articleCard: {
-        backgroundColor:
-          theme === "dark"
-            ? COLOR_CONSTANTS.paper.dark
-            : COLOR_CONSTANTS.paper.light,
-      },
-      articleText: {
+      icon: {
         color: theme === "dark" ? "white" : "black",
+      },
+      input: {
+        color: theme === "dark" ? "white" : "black",
+        backgroundColor: COLOR_CONSTANTS.background.dark,
+      },
+      button: {
+        backgroundColor: COLOR_CONSTANTS.accent.green,
+        padding: 2,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+      },
+      buttonText: {
+        color: "white",
+        textTransform: "capitalize",
         fontFamily: "NotoSansJP_400Regular",
-      },
-      articleHeader: {
-        color: theme === "dark" ? "white" : "black",
-        fontFamily: "NotoSansJP_700Bold",
-      },
-      articleArrow: {
-        backgroundColor: theme === "dark" ? "white" : "black",
       },
     })
   );
@@ -74,7 +80,10 @@ const Home = () => {
             ? COLOR_CONSTANTS.background.dark
             : COLOR_CONSTANTS.background.light,
       },
-
+      header: {
+        ...styles.header,
+        color: theme === "dark" ? "white" : "black",
+      },
       text: {
         ...styles.text,
         color: theme === "dark" ? "white" : "black",
@@ -82,36 +91,23 @@ const Home = () => {
       hr: {
         color: theme === "dark" ? "white" : "black",
       },
-      header: {
-        ...styles.header,
+      icon: {
         color: theme === "dark" ? "white" : "black",
       },
-      articleCard: {
-        ...styles.articleCard,
+      input: {
+        color: theme === "dark" ? "white" : "black",
         backgroundColor:
-          theme === "dark"
-            ? COLOR_CONSTANTS.paper.dark
-            : COLOR_CONSTANTS.paper.light,
-      },
-      articleText: {
-        ...styles.articleText,
-        color: theme === "dark" ? "white" : "black",
-      },
-      articleHeader: {
-        ...styles.articleHeader,
-        color: theme === "dark" ? "white" : "black",
-      },
-      articleArrow: {
-        backgroundColor: theme === "dark" ? "white" : "black",
+          theme === "dark" ? COLOR_CONSTANTS.background.dark : "white",
+        borderColor: theme === "dark" ? "#BCBDBC" : "#878A8C",
       },
     });
   }, [theme]);
 
   if (fontsLoaded) {
     return (
-      <BarContainer>
-        <View style={{ flex: 1, overflow: "scroll", ...styles.background }}>
-          <HomeContent styles={styles} />
+      <BarContainer showSettings={false} showBack={true}>
+        <View style={{ flex: 1, ...styles.background }}>
+          <SettingsContent styles={styles} />
         </View>
       </BarContainer>
     );
@@ -120,4 +116,4 @@ const Home = () => {
   return <></>;
 };
 
-export default Home;
+export default Settings;

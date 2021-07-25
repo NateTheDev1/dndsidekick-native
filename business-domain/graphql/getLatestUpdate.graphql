@@ -1,0 +1,10 @@
+query GetLatestUpdate {
+  getLatestUpdate {
+    id
+    title
+    version
+    releaseDate
+    tags
+    paragraphs
+  }
+}

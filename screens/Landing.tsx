@@ -23,6 +23,7 @@ import { useHistory } from "react-router-native";
 import { FadeInView } from "../components/FadeInView";
 import { UserSelectors } from "../redux/User/selectors";
 import { useEffect } from "react";
+import Constants from "expo-constants";
 
 const Landing = () => {
   // const isDarkMode = useColorScheme() === 'dark
@@ -76,7 +77,7 @@ const Landing = () => {
                 fontFamily: "NotoSansJP_500Medium",
               }}
             >
-              Release 0.0.1
+              Release {Constants.manifest?.version}
             </Text>
             <View
               style={{

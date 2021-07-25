@@ -12,8 +12,9 @@ export const COLOR_CONSTANTS = {
     dark: "#101519",
   },
   paper: {
-    light: "#FFFFFF",
-    dark: "#101519",
+    light: "#F0F0F0",
+    dark: "#22272A",
+    nav: "#22272A",
   },
   accent: {
     green: "#00BB7C",

@@ -8,6 +8,7 @@ export const initialUserState: UserState = {
   userId: undefined,
   user: undefined,
   loading: false,
+  theme: "dark",
 };
 
 export const userReducer = (
@@ -42,6 +43,9 @@ export const userReducer = (
         user: undefined,
         userId: undefined,
       };
+    }
+    case UserActionConstants.SET_THEME: {
+      return { ...state, theme: action.payload };
     }
     default: {
       return { ...state };

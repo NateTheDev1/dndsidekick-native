@@ -17,6 +17,28 @@ export type Scalars = {
 };
 
 
+export type Article = {
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+  author: Scalars['String'];
+  views: Scalars['Int'];
+  content?: Maybe<Array<Maybe<ArticleContent>>>;
+};
+
+export type ArticleContent = {
+  id: Scalars['Int'];
+  articleId: Scalars['Int'];
+  type: Scalars['String'];
+  fontSize: Scalars['String'];
+  imageURL?: Maybe<Scalars['String']>;
+  order: Scalars['Int'];
+};
+
+export type ArticleOrder =
+  | 'TOP'
+  | 'ALL';
+
 export type CacheControlScope =
   | 'PUBLIC'
   | 'PRIVATE';
@@ -100,6 +122,47 @@ export type CharacterStepInput = {
   character: CharacterInput;
 };
 
+export type CreateArticleContentBlock = {
+  articleId: Scalars['Int'];
+  type: Scalars['String'];
+  fontSize: Scalars['String'];
+  imageURL?: Maybe<Scalars['String']>;
+  order: Scalars['Int'];
+};
+
+export type CreateArticleInput = {
+  title: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+  author: Scalars['String'];
+  views: Scalars['Int'];
+  content?: Maybe<Array<Maybe<CreateArticleContentBlock>>>;
+};
+
+export type DevUpdate = {
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  version?: Maybe<Scalars['String']>;
+  releaseDate?: Maybe<Scalars['String']>;
+  tags: Array<Maybe<Scalars['String']>>;
+  paragraphs: Array<Maybe<Scalars['String']>>;
+};
+
+export type DevUpdateInput = {
+  title: Scalars['String'];
+  version?: Maybe<Scalars['String']>;
+  releaseDate?: Maybe<Scalars['String']>;
+  tags: Array<Maybe<Scalars['String']>>;
+  paragraphs: Array<Maybe<Scalars['String']>>;
+};
+
+export type DevUpdatePatchInput = {
+  title?: Maybe<Scalars['String']>;
+  version?: Maybe<Scalars['String']>;
+  releaseDate?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  paragraphs?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
 export type InitCharacterInput = {
   userId: Scalars['Int'];
   character: CharacterInput;
@@ -125,12 +188,18 @@ export type Mutation = {
   deleteSoundboard: Scalars['Boolean'];
   deleteSoundboardLink: Scalars['Boolean'];
   addSoundboardLink: Scalars['Boolean'];
+  publishUpdate?: Maybe<DevUpdate>;
+  deleteUpdate: Scalars['Boolean'];
+  editUpdate: DevUpdate;
+  createArticle: Article;
+  deleteArticle: Scalars['Boolean'];
   signup: User;
   login: User;
   appleLogin: User;
   waitListSignup: Scalars['Boolean'];
   resetPasswordFromCode: Scalars['Boolean'];
   sendPasswordReset: Scalars['Boolean'];
+  updateUser: User;
 };
 
 
@@ -169,6 +238,32 @@ export type MutationAddSoundboardLinkArgs = {
 };
 
 
+export type MutationPublishUpdateArgs = {
+  update: DevUpdateInput;
+};
+
+
+export type MutationDeleteUpdateArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationEditUpdateArgs = {
+  update: DevUpdatePatchInput;
+  id: Scalars['Int'];
+};
+
+
+export type MutationCreateArticleArgs = {
+  article: CreateArticleInput;
+};
+
+
+export type MutationDeleteArticleArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type MutationSignupArgs = {
   user: SignupInput;
 };
@@ -198,6 +293,12 @@ export type MutationSendPasswordResetArgs = {
   email: Scalars['String'];
 };
 
+
+export type MutationUpdateUserArgs = {
+  fullName: Scalars['String'];
+  id: Scalars['Int'];
+};
+
 export type PasswordResetInput = {
   code: Scalars['String'];
   newPassword: Scalars['String'];
@@ -208,6 +309,9 @@ export type Query = {
   getInventory: Inventory;
   getSoundboards: Array<Maybe<Soundboard>>;
   getSoundboard: Soundboard;
+  getLatestUpdate?: Maybe<DevUpdate>;
+  getArticle: Article;
+  getArticles: Array<Maybe<Article>>;
   getUser: User;
 };
 
@@ -224,6 +328,16 @@ export type QueryGetInventoryArgs = {
 
 export type QueryGetSoundboardArgs = {
   soundboardId: Scalars['Int'];
+};
+
+
+export type QueryGetArticleArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryGetArticlesArgs = {
+  params: ArticleOrder;
 };
 
 
@@ -266,6 +380,18 @@ export type User = {
   createdAt: Scalars['String'];
 };
 
+export type GetLatestUpdateQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLatestUpdateQuery = { getLatestUpdate?: Maybe<{ id: number, title: string, version?: Maybe<string>, releaseDate?: Maybe<string>, tags: Array<Maybe<string>>, paragraphs: Array<Maybe<string>> }> };
+
+export type GetUserQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetUserQuery = { getUser: { id: number, name: string, email: string, createdAt: string } };
+
 export type LoginMutationVariables = Exact<{
   credentials: LoginInput;
 }>;
@@ -294,7 +420,92 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { signup: { id: number, token?: Maybe<string> } };
 
+export type UpdateUserMutationVariables = Exact<{
+  fullName: Scalars['String'];
+  id: Scalars['Int'];
+}>;
 
+
+export type UpdateUserMutation = { updateUser: { id: number } };
+
+
+export const GetLatestUpdateDocument = gql`
+    query GetLatestUpdate {
+  getLatestUpdate {
+    id
+    title
+    version
+    releaseDate
+    tags
+    paragraphs
+  }
+}
+    `;
+
+/**
+ * __useGetLatestUpdateQuery__
+ *
+ * To run a query within a React component, call `useGetLatestUpdateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestUpdateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestUpdateQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLatestUpdateQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>(GetLatestUpdateDocument, options);
+      }
+export function useGetLatestUpdateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>(GetLatestUpdateDocument, options);
+        }
+export type GetLatestUpdateQueryHookResult = ReturnType<typeof useGetLatestUpdateQuery>;
+export type GetLatestUpdateLazyQueryHookResult = ReturnType<typeof useGetLatestUpdateLazyQuery>;
+export type GetLatestUpdateQueryResult = Apollo.QueryResult<GetLatestUpdateQuery, GetLatestUpdateQueryVariables>;
+export const GetUserDocument = gql`
+    query GetUser($id: Int!) {
+  getUser(id: $id) {
+    id
+    name
+    email
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($credentials: LoginInput!) {
   login(credentials: $credentials) {
@@ -425,3 +636,37 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($fullName: String!, $id: Int!) {
+  updateUser(fullName: $fullName, id: $id) {
+    id
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      fullName: // value for 'fullName'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
