@@ -41,7 +41,6 @@ export const Router = () => {
           path="/characters"
           component={loggedIn ? Characters : Landing}
         />
-
         <Route exact path="/updates" component={loggedIn ? Updates : Landing} />
         <Route
           exact
