@@ -16,8 +16,9 @@ import { DeepLinkComponent } from "./components/DeepLinkComponent";
 import ResetPassword from "./screens/Onboarding/ResetPassword";
 import Settings from "./screens/app/root-screens/Settings";
 import Updates from "./screens/app/root-screens/Updates";
-import Characters from "./screens/app/root-screens/Characters";
 
+import Characters from "./screens/app/root-screens/Characters";
+        
 export const Router = () => {
   const loggedIn = UserSelectors.useSelectAuthenticated();
   const setLoggedIn = UserActions.useLogin();
