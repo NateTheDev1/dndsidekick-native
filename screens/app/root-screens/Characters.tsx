@@ -7,7 +7,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import BarContainer from "../../../components/BarContainer";
 import { CharacterCard } from "../../../components/CharacterCard";
 import { UserSelectors } from "../../../redux/User/selectors";
@@ -88,6 +94,9 @@ const Characters = () => {
             : COLOR_CONSTANTS.paper.light,
         padding: 10,
       },
+      characterImage: {
+        color: theme === "dark" ? "white" : COLOR_CONSTANTS.accent.red,
+      },
     })
   );
 
@@ -123,6 +132,9 @@ const Characters = () => {
             ? COLOR_CONSTANTS.paper.dark
             : COLOR_CONSTANTS.paper.light,
       },
+      characterImage: {
+        color: theme === "dark" ? "white" : COLOR_CONSTANTS.accent.red,
+      },
     });
   }, [theme]);
 
@@ -149,7 +161,7 @@ const Characters = () => {
                 style={{
                   ...styles.header,
                   opacity: 0.5,
-                  fontSize: 16,
+                  fontSize: 14,
                   marginTop: 25,
                 }}
               >
@@ -165,6 +177,58 @@ const Characters = () => {
               />
             </>
           )}
+          <TouchableOpacity>
+            <View
+              style={{
+                ...styles.newCard,
+                marginTop: 30,
+                height: 50,
+                borderRadius: 10,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  ...styles.text,
+                  marginVertical: 0,
+                  textAlign: "center",
+                  fontSize: 25,
+                }}
+              >
+                +
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <ScrollView showsVerticalScrollIndicator={true}>
+            <CharacterCard
+              avatar={exampleChar.avatar}
+              name={exampleChar.name}
+              cls={exampleChar.cls}
+              race={exampleChar.race}
+              level={exampleChar.level}
+              styles={styles}
+              style={{ marginTop: 50 }}
+            />
+            <CharacterCard
+              avatar={exampleChar.avatar}
+              name={exampleChar.name}
+              cls={exampleChar.cls}
+              race={exampleChar.race}
+              level={exampleChar.level}
+              styles={styles}
+              style={{ marginTop: 50 }}
+            />
+            <CharacterCard
+              avatar={exampleChar.avatar}
+              name={exampleChar.name}
+              cls={exampleChar.cls}
+              race={exampleChar.race}
+              level={exampleChar.level}
+              styles={styles}
+              style={{ marginTop: 50 }}
+            />
+          </ScrollView>
         </View>
       </BarContainer>
     );
