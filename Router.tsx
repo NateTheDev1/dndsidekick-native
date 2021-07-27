@@ -17,6 +17,8 @@ import ResetPassword from "./screens/Onboarding/ResetPassword";
 import Settings from "./screens/app/root-screens/Settings";
 import Updates from "./screens/app/root-screens/Updates";
 
+import Characters from "./screens/app/root-screens/Characters";
+        
 export const Router = () => {
   const loggedIn = UserSelectors.useSelectAuthenticated();
   const setLoggedIn = UserActions.useLogin();
@@ -35,6 +37,11 @@ export const Router = () => {
   return (
     <NativeRouter>
       <Stack animationType="fade-vertical">
+        <Route
+          exact
+          path="/characters"
+          component={loggedIn ? Characters : Landing}
+        />
         <Route exact path="/updates" component={loggedIn ? Updates : Landing} />
         <Route
           exact
