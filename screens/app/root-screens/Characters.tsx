@@ -18,6 +18,7 @@ import BarContainer from "../../../components/BarContainer";
 import { CharacterCard } from "../../../components/CharacterCard";
 import { UserSelectors } from "../../../redux/User/selectors";
 import { COLOR_CONSTANTS } from "../../../theme/color";
+import { useHistory } from "react-router-native";
 
 const exampleChar = {
   name: "Doredren the blacksmith",
@@ -35,6 +36,8 @@ async function getLastUsedCharacters() {
 const Characters = () => {
   const theme = UserSelectors.useSelectTheme();
   const [lastUsedChar, setLastUsedChar] = useState<string | null>(null);
+
+  const history = useHistory();
 
   const [fontsLoaded] = useFonts({
     NotoSansJP_700Bold,
@@ -150,6 +153,10 @@ const Characters = () => {
 
   AsyncStorage.setItem("@LAST_USED_CHARACTER", "1");
 
+  const handleAddStart = () => {
+    history.push("/characters/create");
+  };
+
   if (fontsLoaded) {
     return (
       <BarContainer>
@@ -177,7 +184,7 @@ const Characters = () => {
               />
             </>
           )}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => handleAddStart()}>
             <View
               style={{
                 ...styles.newCard,
