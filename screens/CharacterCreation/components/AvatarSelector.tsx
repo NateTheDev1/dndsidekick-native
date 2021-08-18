@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import { Modal } from "react-native-paper";
 //@ts-ignore
 import Hr from "react-native-hr-plus";
@@ -9,11 +9,20 @@ const AvatarSelector = ({
   open,
   setOpen,
   styles,
+  formValues,
+  setFormValues,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   styles: any;
+  formValues: any;
+  setFormValues: any;
 }) => {
+  const handleImageSelect = (avatar: string) => {
+    setFormValues({ ...formValues, avatar });
+    setOpen(false);
+  };
+
   return (
     <Modal
       visible={open}
@@ -58,22 +67,32 @@ const AvatarSelector = ({
           }}
         >
           <View
-            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
           >
             {avatarOptions.map((avatar, key) => (
-              <Image
-                source={{ uri: avatar, width: 75, height: 75 }}
-                width={75}
-                height={75}
+              <TouchableOpacity
+                onPress={() => handleImageSelect(avatar)}
                 style={{
                   borderWidth: 2,
                   borderColor: "white",
                   borderRadius: 10,
                   maxWidth: "33.3%",
                   marginBottom: 25,
-                  marginRight: 10,
+                  marginRight: 5,
                 }}
-              />
+              >
+                <Image
+                  source={{ uri: avatar, width: 75, height: 75 }}
+                  style={{ width: "100%", height: "100%" }}
+                  width={75}
+                  height={75}
+                />
+              </TouchableOpacity>
             ))}
           </View>
         </ScrollView>

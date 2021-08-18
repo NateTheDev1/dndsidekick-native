@@ -4,7 +4,7 @@ import {
   NotoSansJP_400Regular,
 } from "@expo-google-fonts/noto-sans-jp";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BarContainer from "../../components/BarContainer";
 import { COLOR_CONSTANTS } from "../../theme/color";
 import { UserSelectors } from "../../redux/User/selectors";
@@ -13,11 +13,16 @@ import { useState, useEffect } from "react";
 import Hr from "react-native-hr-plus";
 import { Button, HelperText, ProgressBar, TextInput } from "react-native-paper";
 import AvatarSelector from "./components/AvatarSelector";
+import { useHistory } from "react-router-native";
 
 const Start = () => {
   const theme = UserSelectors.useSelectTheme();
+  const history = useHistory();
 
-  const [formValues, setFormValues] = useState({ name: "", avatar: null });
+  const [formValues, setFormValues] = useState<{
+    name: string;
+    avatar: null | string;
+  }>({ name: "", avatar: null });
   const [formErrors, setFormErrors] = useState({ name: "", avatar: "" });
 
   const [editingAvatar, setEditingAvatar] = useState(false);
@@ -136,11 +141,17 @@ const Start = () => {
     });
   }, [theme]);
 
+  const handleSubmit = () => {
+    history.push("/characters/race");
+  };
+
   if (fontsLoaded) {
     return (
       <BarContainer>
         <View style={{ flex: 1, ...styles.background }}>
           <AvatarSelector
+            formValues={formValues}
+            setFormValues={setFormValues}
             open={editingAvatar}
             setOpen={setEditingAvatar}
             styles={styles}
@@ -193,6 +204,21 @@ const Start = () => {
                         ></View>
                       </TouchableOpacity>
                     )}
+                    {formValues.avatar && (
+                      <TouchableOpacity onPress={() => setEditingAvatar(true)}>
+                        <Image
+                          source={{ uri: formValues.avatar }}
+                          style={{
+                            backgroundColor: "gray",
+                            width: 100,
+                            height: 100,
+                            marginBottom: 40,
+                            marginTop: 10,
+                            borderRadius: 5,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    )}
                   </View>
                 )}
 
@@ -223,7 +249,7 @@ const Start = () => {
                   {formErrors.name}
                 </HelperText>
               </View>
-              <Button style={styles.button}>
+              <Button style={styles.button} onPress={() => handleSubmit()}>
                 <Text style={styles.buttonText}>Continue</Text>
               </Button>
               <Text
