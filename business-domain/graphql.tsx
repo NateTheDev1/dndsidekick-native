@@ -306,6 +306,7 @@ export type PasswordResetInput = {
 
 export type Query = {
   getCharacter: Character;
+  getCharacters: Array<Maybe<Character>>;
   getInventory: Inventory;
   getSoundboards: Array<Maybe<Soundboard>>;
   getSoundboard: Soundboard;
@@ -318,6 +319,11 @@ export type Query = {
 
 export type QueryGetCharacterArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryGetCharactersArgs = {
+  userId: Scalars['Int'];
 };
 
 
@@ -380,6 +386,13 @@ export type User = {
   createdAt: Scalars['String'];
 };
 
+export type GetCharactersQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type GetCharactersQuery = { getCharacters: Array<Maybe<{ id: number, userId: number, name?: Maybe<string>, avatar?: Maybe<string>, race?: Maybe<number>, class?: Maybe<number>, background?: Maybe<number>, status?: Maybe<string>, languages?: Maybe<Array<Maybe<number>>>, stats?: Maybe<string>, hp?: Maybe<number>, maxHP?: Maybe<number>, tempHP?: Maybe<number>, deathSaves?: Maybe<Array<Maybe<boolean>>>, conditions?: Maybe<Array<Maybe<number>>>, level?: Maybe<number>, xp?: Maybe<number>, proficiencies?: Maybe<Array<Maybe<number>>>, eyes?: Maybe<string>, skin?: Maybe<string>, hair?: Maybe<string>, backstory?: Maybe<string>, height?: Maybe<string>, weight?: Maybe<string>, age?: Maybe<string>, alignment?: Maybe<number>, gender?: Maybe<string>, personalityTraits?: Maybe<number>, ideals?: Maybe<number>, bonds?: Maybe<number>, flaws?: Maybe<number>, faith?: Maybe<string>, lifestyle?: Maybe<number>, backgroundFeatures?: Maybe<Array<Maybe<number>>>, characterStep?: Maybe<number> }>> };
+
 export type GetLatestUpdateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -391,6 +404,13 @@ export type GetUserQueryVariables = Exact<{
 
 
 export type GetUserQuery = { getUser: { id: number, name: string, email: string, createdAt: string } };
+
+export type InitializeCharacterMutationVariables = Exact<{
+  input: InitCharacterInput;
+}>;
+
+
+export type InitializeCharacterMutation = { initializeCharacter: { id: number, userId: number, name?: Maybe<string>, avatar?: Maybe<string>, race?: Maybe<number>, class?: Maybe<number>, background?: Maybe<number>, status?: Maybe<string>, languages?: Maybe<Array<Maybe<number>>>, stats?: Maybe<string>, hp?: Maybe<number>, maxHP?: Maybe<number>, tempHP?: Maybe<number>, deathSaves?: Maybe<Array<Maybe<boolean>>>, conditions?: Maybe<Array<Maybe<number>>>, level?: Maybe<number>, xp?: Maybe<number>, proficiencies?: Maybe<Array<Maybe<number>>>, eyes?: Maybe<string>, skin?: Maybe<string>, hair?: Maybe<string>, backstory?: Maybe<string>, height?: Maybe<string>, weight?: Maybe<string>, age?: Maybe<string>, alignment?: Maybe<number>, gender?: Maybe<string>, personalityTraits?: Maybe<number>, ideals?: Maybe<number>, bonds?: Maybe<number>, flaws?: Maybe<number>, faith?: Maybe<string>, lifestyle?: Maybe<number>, backgroundFeatures?: Maybe<Array<Maybe<number>>>, characterStep?: Maybe<number> } };
 
 export type LoginMutationVariables = Exact<{
   credentials: LoginInput;
@@ -429,6 +449,75 @@ export type UpdateUserMutationVariables = Exact<{
 export type UpdateUserMutation = { updateUser: { id: number } };
 
 
+export const GetCharactersDocument = gql`
+    query getCharacters($userId: Int!) {
+  getCharacters(userId: $userId) {
+    id
+    userId
+    name
+    avatar
+    race
+    class
+    background
+    status
+    languages
+    stats
+    hp
+    maxHP
+    tempHP
+    deathSaves
+    conditions
+    level
+    xp
+    proficiencies
+    eyes
+    skin
+    hair
+    backstory
+    height
+    weight
+    age
+    alignment
+    gender
+    personalityTraits
+    ideals
+    bonds
+    flaws
+    faith
+    lifestyle
+    backgroundFeatures
+    characterStep
+  }
+}
+    `;
+
+/**
+ * __useGetCharactersQuery__
+ *
+ * To run a query within a React component, call `useGetCharactersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCharactersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCharactersQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetCharactersQuery(baseOptions: Apollo.QueryHookOptions<GetCharactersQuery, GetCharactersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCharactersQuery, GetCharactersQueryVariables>(GetCharactersDocument, options);
+      }
+export function useGetCharactersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCharactersQuery, GetCharactersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCharactersQuery, GetCharactersQueryVariables>(GetCharactersDocument, options);
+        }
+export type GetCharactersQueryHookResult = ReturnType<typeof useGetCharactersQuery>;
+export type GetCharactersLazyQueryHookResult = ReturnType<typeof useGetCharactersLazyQuery>;
+export type GetCharactersQueryResult = Apollo.QueryResult<GetCharactersQuery, GetCharactersQueryVariables>;
 export const GetLatestUpdateDocument = gql`
     query GetLatestUpdate {
   getLatestUpdate {
@@ -506,6 +595,73 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const InitializeCharacterDocument = gql`
+    mutation InitializeCharacter($input: InitCharacterInput!) {
+  initializeCharacter(input: $input) {
+    id
+    userId
+    name
+    avatar
+    race
+    class
+    background
+    status
+    languages
+    stats
+    hp
+    maxHP
+    tempHP
+    deathSaves
+    conditions
+    level
+    xp
+    proficiencies
+    eyes
+    skin
+    hair
+    backstory
+    height
+    weight
+    age
+    alignment
+    gender
+    personalityTraits
+    ideals
+    bonds
+    flaws
+    faith
+    lifestyle
+    backgroundFeatures
+    characterStep
+  }
+}
+    `;
+export type InitializeCharacterMutationFn = Apollo.MutationFunction<InitializeCharacterMutation, InitializeCharacterMutationVariables>;
+
+/**
+ * __useInitializeCharacterMutation__
+ *
+ * To run a mutation, you first call `useInitializeCharacterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitializeCharacterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initializeCharacterMutation, { data, loading, error }] = useInitializeCharacterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useInitializeCharacterMutation(baseOptions?: Apollo.MutationHookOptions<InitializeCharacterMutation, InitializeCharacterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InitializeCharacterMutation, InitializeCharacterMutationVariables>(InitializeCharacterDocument, options);
+      }
+export type InitializeCharacterMutationHookResult = ReturnType<typeof useInitializeCharacterMutation>;
+export type InitializeCharacterMutationResult = Apollo.MutationResult<InitializeCharacterMutation>;
+export type InitializeCharacterMutationOptions = Apollo.BaseMutationOptions<InitializeCharacterMutation, InitializeCharacterMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($credentials: LoginInput!) {
   login(credentials: $credentials) {
