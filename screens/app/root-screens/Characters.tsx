@@ -19,6 +19,7 @@ import { CharacterCard } from "../../../components/CharacterCard";
 import { UserSelectors } from "../../../redux/User/selectors";
 import { COLOR_CONSTANTS } from "../../../theme/color";
 import { useHistory } from "react-router-native";
+import { useGetCharactersQuery } from "../../../business-domain/graphql";
 
 const exampleChar = {
   name: "Doredren the blacksmith",
@@ -35,7 +36,18 @@ async function getLastUsedCharacters() {
 
 const Characters = () => {
   const theme = UserSelectors.useSelectTheme();
+  const userId = UserSelectors.useSelectUserId();
   const [lastUsedChar, setLastUsedChar] = useState<string | null>(null);
+
+  const { data, loading, refetch } = useGetCharactersQuery({
+    variables: { userId: userId as any },
+    skip: !userId,
+    fetchPolicy: "network-only",
+  });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const history = useHistory();
 
@@ -208,33 +220,23 @@ const Characters = () => {
             </View>
           </TouchableOpacity>
           <ScrollView showsVerticalScrollIndicator={true}>
-            <CharacterCard
-              avatar={exampleChar.avatar}
-              name={exampleChar.name}
-              cls={exampleChar.cls}
-              race={exampleChar.race}
-              level={exampleChar.level}
-              styles={styles}
-              style={{ marginTop: 50 }}
-            />
-            <CharacterCard
-              avatar={exampleChar.avatar}
-              name={exampleChar.name}
-              cls={exampleChar.cls}
-              race={exampleChar.race}
-              level={exampleChar.level}
-              styles={styles}
-              style={{ marginTop: 50 }}
-            />
-            <CharacterCard
-              avatar={exampleChar.avatar}
-              name={exampleChar.name}
-              cls={exampleChar.cls}
-              race={exampleChar.race}
-              level={exampleChar.level}
-              styles={styles}
-              style={{ marginTop: 50 }}
-            />
+            {data?.getCharacters.map((char, key) => {
+              if (char) {
+                return (
+                  <CharacterCard
+                    avatar={char.avatar ?? ""}
+                    name={char.name ?? ""}
+                    //@ts-ignore
+                    cls={char.class ?? ""}
+                    //@ts-ignore
+                    race={char.race ?? "UKNOWN"}
+                    level={char.level ?? 1}
+                    styles={styles}
+                    style={{ marginTop: 50 }}
+                  />
+                );
+              }
+            })}
           </ScrollView>
         </View>
       </BarContainer>

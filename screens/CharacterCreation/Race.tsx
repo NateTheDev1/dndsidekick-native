@@ -10,9 +10,7 @@ import { COLOR_CONSTANTS } from "../../theme/color";
 import { UserSelectors } from "../../redux/User/selectors";
 import { useState, useEffect } from "react";
 //@ts-ignore
-import Hr from "react-native-hr-plus";
 import { Button, HelperText, ProgressBar, TextInput } from "react-native-paper";
-import AvatarSelector from "./components/AvatarSelector";
 
 const Race = () => {
   const theme = UserSelectors.useSelectTheme();

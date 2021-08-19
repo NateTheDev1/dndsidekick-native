@@ -1,0 +1,39 @@
+mutation InitializeCharacter($input: InitCharacterInput!) {
+  initializeCharacter(input: $input) {
+    id
+    userId
+    name
+    avatar
+    race
+    class
+    background
+    status
+    languages
+    stats
+    hp
+    maxHP
+    tempHP
+    deathSaves
+    conditions
+    level
+    xp
+    proficiencies
+    eyes
+    skin
+    hair
+    backstory
+    height
+    weight
+    age
+    alignment
+    gender
+    personalityTraits
+    ideals
+    bonds
+    flaws
+    faith
+    lifestyle
+    backgroundFeatures
+    characterStep
+  }
+}

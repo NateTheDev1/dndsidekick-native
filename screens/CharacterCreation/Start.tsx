@@ -9,11 +9,19 @@ import BarContainer from "../../components/BarContainer";
 import { COLOR_CONSTANTS } from "../../theme/color";
 import { UserSelectors } from "../../redux/User/selectors";
 import { useState, useEffect } from "react";
-//@ts-ignore
-import Hr from "react-native-hr-plus";
-import { Button, HelperText, ProgressBar, TextInput } from "react-native-paper";
+
+import {
+  ActivityIndicator,
+  Button,
+  HelperText,
+  ProgressBar,
+  TextInput,
+} from "react-native-paper";
 import AvatarSelector from "./components/AvatarSelector";
 import { useHistory } from "react-router-native";
+
+import faker from "faker";
+import { useInitializeCharacterMutation } from "../../business-domain/graphql";
 
 const Start = () => {
   const theme = UserSelectors.useSelectTheme();
@@ -24,6 +32,10 @@ const Start = () => {
     avatar: null | string;
   }>({ name: "", avatar: null });
   const [formErrors, setFormErrors] = useState({ name: "", avatar: "" });
+
+  const userId = UserSelectors.useSelectUserId()!;
+
+  const [initCharacter, initCharData] = useInitializeCharacterMutation();
 
   const [editingAvatar, setEditingAvatar] = useState(false);
 
@@ -142,12 +154,39 @@ const Start = () => {
   }, [theme]);
 
   const handleSubmit = () => {
-    history.push("/characters/race");
+    const nameError = formValues.name.length < 1;
+
+    if (nameError) {
+      setFormErrors({ ...formErrors, name: "A name is required" });
+    } else {
+      initCharacter({
+        variables: {
+          input: {
+            character: {
+              name: formValues.name,
+              avatar: formValues.avatar ?? "",
+            },
+            userId: userId,
+          },
+        },
+      }).then((res) => {
+        if (res.data?.initializeCharacter) {
+          history.push("/characters/race");
+        }
+      });
+    }
+  };
+
+  const generateRandomName = () => {
+    setFormValues({
+      ...formValues,
+      name: faker.name.firstName() + " " + faker.name.lastName(),
+    });
   };
 
   if (fontsLoaded) {
     return (
-      <BarContainer>
+      <BarContainer showBack={true} showSettings={false}>
         <View style={{ flex: 1, ...styles.background }}>
           <AvatarSelector
             formValues={formValues}
@@ -221,7 +260,19 @@ const Start = () => {
                     )}
                   </View>
                 )}
-
+                <TouchableOpacity onPress={() => generateRandomName()}>
+                  <Text
+                    style={{
+                      ...styles.text,
+                      textDecorationLine: "underline",
+                      opacity: 0.8,
+                      marginTop: 0,
+                      fontSize: 12,
+                    }}
+                  >
+                    Tap to randomize character name
+                  </Text>
+                </TouchableOpacity>
                 <TextInput
                   label="Character Name"
                   placeholder="Bertrum The Great"
@@ -249,9 +300,18 @@ const Start = () => {
                   {formErrors.name}
                 </HelperText>
               </View>
-              <Button style={styles.button} onPress={() => handleSubmit()}>
-                <Text style={styles.buttonText}>Continue</Text>
-              </Button>
+              {initCharData.loading ? (
+                <ActivityIndicator
+                  animating={true}
+                  color={COLOR_CONSTANTS.accent.red}
+                  size="large"
+                />
+              ) : (
+                <Button style={styles.button} onPress={() => handleSubmit()}>
+                  <Text style={styles.buttonText}>Continue</Text>
+                </Button>
+              )}
+
               <Text
                 style={{ ...styles.text, textAlign: "center", opacity: 0.5 }}
               >
